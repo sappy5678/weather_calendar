@@ -1,5 +1,5 @@
 # Use Ubuntu image docker to build
-image: ubuntu:16.04
+image: docker:lastest
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
@@ -7,19 +7,19 @@ variables:
   DOCKER_DRIVER: overlay2
 
 before_script:
-  - apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
-    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-  - apt-get update
+#  - apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+#    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+#  - apt-get update
 #  - apt install -y python
-  - apt install -y python3
-  - alias python=python3
-  - python -V                                   # Print out python version for debugging
+#  - apt install -y python3
+#  - alias python=python3
+#  - python -V                                   # Print out python version for debugging
   - echo $Gitlab_Username
   # Install Docker
-  - apt-get install -y curl
-  - curl -fsSL get.docker.com -o get-docker.sh
-  - sh get-docker.sh
-  - usermod -aG docker gitlab-runner
+#  - apt-get install -y curl
+#  - curl -fsSL get.docker.com -o get-docker.sh
+#  - sh get-docker.sh
+#  - usermod -aG docker gitlab-runner
 #  - systemctl start docker
 
 
