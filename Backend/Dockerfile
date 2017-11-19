@@ -16,5 +16,7 @@ EXPOSE 80
 # Define environment variable
 ENV NAME World
 
+USER 1001
+
 # Run app.py when the container launches
 CMD ["python", "weather_calendar.py"]
