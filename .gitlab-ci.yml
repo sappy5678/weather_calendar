@@ -1,5 +1,5 @@
-# Use Python image docker to build
-image: python:latest
+# Use Ubuntu image docker to build
+image: ubuntu:16.04
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
