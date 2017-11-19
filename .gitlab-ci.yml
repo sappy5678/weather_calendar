@@ -1,0 +1,28 @@
+# Use Python image docker to build
+image: python:latest
+
+before_script:
+  - python -V                                   # Print out python version for debugging
+
+stages:
+  - build
+  - test
+  - deploy
+
+# Build Stage
+build_docker:
+  script:
+    - docker login registry.gitlab.com -u $Gitlab_Username -p $Personal_Access_Token
+    - docker build -t registry.gitlab.com/sappy5678/weather_calendar/Backend:Server ./Backend
+    - docker push registry.gitlab.com/sappy5678/weather_calendar/Backend:Server
+
+    - docker login -u $Gitlab_Username -p $Dockerhub
+    - docker build -t sappy5678/weather_calendar:Backend_Server ./Backend
+    - docker push sappy5678/weather_calendar:Backend_Server
+
+  stage: build
+#  only:
+#    - master
+
+
+
