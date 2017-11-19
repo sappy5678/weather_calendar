@@ -3,6 +3,11 @@ image: python:latest
 
 before_script:
   - python -V                                   # Print out python version for debugging
+  - echo $Gitlab_Username
+  # Install Docker
+  - apt-get install curl
+  - curl -fsSL get.docker.com -o get-docker.sh
+  - sh get-docker.sh
 
 stages:
   - build
