@@ -1,5 +1,5 @@
 # Use Ubuntu image docker to build
-image: docker:lastest
+image: docker:latest
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
