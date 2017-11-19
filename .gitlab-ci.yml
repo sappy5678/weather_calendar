@@ -1,14 +1,15 @@
 # Use Python image docker to build
-image: python:latest
+image: docker:latest
 
 before_script:
+  - apt install -y python
   - python -V                                   # Print out python version for debugging
   - echo $Gitlab_Username
-  # Install Docker
-  - apt-get install curl
-  - curl -fsSL get.docker.com -o get-docker.sh
-  - sh get-docker.sh
-  - systemctl start docker
+#  # Install Docker
+#  - apt-get install curl
+#  - curl -fsSL get.docker.com -o get-docker.sh
+#  - sh get-docker.sh
+#  - systemctl start docker
 
 stages:
   - build
