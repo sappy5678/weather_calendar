@@ -14,8 +14,9 @@ before_script:
   - apt-get install curl
   - curl -fsSL get.docker.com -o get-docker.sh
   - sh get-docker.sh
-  - systemctl start docker
   - usermod -aG docker gitlab-runner
+#  - systemctl start docker
+
 
 stages:
   - build
