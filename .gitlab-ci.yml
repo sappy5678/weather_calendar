@@ -1,15 +1,21 @@
 # Use Python image docker to build
-image: docker:latest
+image: python:latest
+
+# When using dind, it's wise to use the overlayfs driver for
+# improved performance.
+variables:
+  DOCKER_DRIVER: overlay2
 
 before_script:
   - apt install -y python
   - python -V                                   # Print out python version for debugging
   - echo $Gitlab_Username
-#  # Install Docker
-#  - apt-get install curl
-#  - curl -fsSL get.docker.com -o get-docker.sh
-#  - sh get-docker.sh
-#  - systemctl start docker
+  # Install Docker
+  - apt-get install curl
+  - curl -fsSL get.docker.com -o get-docker.sh
+  - sh get-docker.sh
+  - systemctl start docker
+  - usermod -aG docker gitlab-runner
 
 stages:
   - build
