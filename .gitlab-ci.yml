@@ -8,8 +8,9 @@ variables:
 
 before_script:
   - apt-get update
+#  - apt install -y python
   - apt install -y python3
-  - python -V                                   # Print out python version for debugging
+  - python3 -V                                   # Print out python version for debugging
   - echo $Gitlab_Username
   # Install Docker
   - apt-get install curl
