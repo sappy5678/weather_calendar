@@ -35,8 +35,8 @@ stages:
 build_docker:
   script:
     - docker login registry.gitlab.com -u $Gitlab_Username -p $Personal_Access_Token
-    - docker build -t registry.gitlab.com/sappy5678/weather_calendar/Backend:Server ./Backend
-    - docker push registry.gitlab.com/sappy5678/weather_calendar/Backend:Server
+    - docker build -t registry.gitlab.com/sappy5678/weather_calendar/backend:server ./Backend
+    - docker push registry.gitlab.com/sappy5678/weather_calendar/backend:server
 
     - docker login -u $Gitlab_Username -p $Dockerhub
     - docker build -t sappy5678/weather_calendar:Backend_Server ./Backend
