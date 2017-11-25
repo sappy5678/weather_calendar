@@ -1,0 +1,50 @@
+# Use Ubuntu image docker to build
+image: docker:latest
+
+# When using dind, it's wise to use the overlayfs driver for
+# improved performance.
+services:
+  - docker:dind
+
+#variables:
+#  DOCKER_DRIVER: overlay2
+
+before_script:
+#  - apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+#    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+#  - apt-get update
+#  - apt install -y python
+#  - apt install -y python3
+#  - alias python=python3
+#  - python -V                                   # Print out python version for debugging
+  - echo $Gitlab_Username
+  # Install Docker
+#  - apt-get install -y curl
+#  - curl -fsSL get.docker.com -o get-docker.sh
+#  - sh get-docker.sh
+#  - usermod -aG docker gitlab-runner
+#  - systemctl start docker
+
+
+stages:
+  - build
+  - test
+  - deploy
+
+# Build Stage
+build_docker:
+  script:
+    - docker login registry.gitlab.com -u $Gitlab_Username -p $Personal_Access_Token
+    - docker build -t registry.gitlab.com/sappy5678/weather_calendar/backend:server ./Backend
+    - docker push registry.gitlab.com/sappy5678/weather_calendar/backend:server
+
+    - docker login -u $Gitlab_Username -p $Dockerhub
+    - docker build -t sappy5678/weather_calendar:Backend_Server ./Backend
+    - docker push sappy5678/weather_calendar:Backend_Server
+
+  stage: build
+#  only:
+#    - master
+
+
+
