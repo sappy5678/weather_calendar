@@ -1,5 +1,5 @@
 # Use Ubuntu image docker to build
-image: docker:latest
+image: python:3.6.3
 
 # When using dind, it's wise to use the overlayfs driver for
 # improved performance.
@@ -46,5 +46,18 @@ build_docker:
 #  only:
 #    - master
 
+deploy_to_aws:
+  script:
+    - cd weather_calendar/Backend
+    - rm Dockerfile
+    - sleep 10
+    - pip install awsebcli --upgrade --user
+
+    # 將eb切換到「weather_calendar」環境
+    - eb use develope
+    # 把程式deploy上「weather_calendar」
+    - eb deploy
+
+  stage: deploy
 
 

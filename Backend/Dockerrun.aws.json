@@ -1,0 +1,13 @@
+{
+ "AWSEBDockerrunVersion": "1",
+ "Image": {
+    "Name": "sappy5678/weather_calendar:Backend_Server",
+    "Update": "true"
+  },
+ "Ports": [
+   {
+     "ContainerPort": "80"
+   }
+ ],
+ "Logging": "/var/log"
+}
