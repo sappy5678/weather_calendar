@@ -60,9 +60,10 @@ deploy_to_aws:
     - cd Backend
     - rm Dockerfile
     - sleep 10
-    - pip install awsebcli --upgrade 
+    - pip install awsebcli --upgrade
 
     # 將eb切換到「weather_calendar」環境
+    - eb init
     - eb use develope
     # 把程式deploy上「weather_calendar」
     - eb deploy
