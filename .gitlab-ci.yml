@@ -33,6 +33,13 @@ stages:
 
 # Build Stage
 build_docker:
+  image: docker:latest
+
+  # When using dind, it's wise to use the overlayfs driver for
+  # improved performance.
+  services:
+    - docker:dind
+
   script:
     - docker login registry.gitlab.com -u $Gitlab_Username -p $Personal_Access_Token
     - docker build -t registry.gitlab.com/sappy5678/weather_calendar/backend:server ./Backend
@@ -47,6 +54,7 @@ build_docker:
 #    - master
 
 deploy_to_aws:
+  image: python:3.6.3
   script:
     - cd weather_calendar/Backend
     - rm Dockerfile
