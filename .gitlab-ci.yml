@@ -56,7 +56,7 @@ build_docker:
 deploy_to_aws:
   image: python:3.6.3
   script:
-    - cd weather_calendar/Backend
+    - ls
     - rm Dockerfile
     - sleep 10
     - pip install awsebcli --upgrade --user
