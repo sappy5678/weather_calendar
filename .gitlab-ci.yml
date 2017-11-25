@@ -57,6 +57,7 @@ deploy_to_aws:
   image: python:3.6.3
   script:
     - ls
+    - cd Backend
     - rm Dockerfile
     - sleep 10
     - pip install awsebcli --upgrade --user
