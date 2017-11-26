@@ -1,7 +1,7 @@
 branch-defaults:
   default:
-    environment: weatherCalendar-env
-environment-defaults:
+    environment: develope
+develope:
   weatherCalendar-env:
     branch: null
     repository: null
