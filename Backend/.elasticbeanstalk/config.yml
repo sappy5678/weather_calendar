@@ -1,6 +1,6 @@
 branch-defaults:
   default:
-    environment: weatherCalendar-env
+    environment: null
 environment-defaults:
   weatherCalendar-env:
     branch: null
