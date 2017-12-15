@@ -6,19 +6,27 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.weathercalendar.MainActivity"
-    tools:showIn="@layout/activity_main">
-
+    tools:showIn="@layout/day_calendar_main">
+    <!-- 如果要暫時取消顯示drawable  把showin 弄掉 -->
+    <!-- tools:showIn="@layout/day_calendar_main" -->
     <!-- If you want the calendar scrollable -->
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-        <com.framgia.library.calendardayview.CalendarDayView
-            android:id="@+id/dayView"
+        android:layout_marginTop="60dp">
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:eventMarginLeft="10dp"
-            app:dayHeight="@dimen/dayHeight"/>
-    </ScrollView>
+            android:layout_height="match_parent">
+
+            <com.framgia.library.calendardayview.CalendarDayView
+                android:id="@+id/dayView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:dayHeight="@dimen/dayHeight"
+                app:eventMarginLeft="10dp" />
+        </ScrollView>
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

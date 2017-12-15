@@ -1,5 +1,6 @@
 package com.example.weathercalendar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -42,6 +43,10 @@ public class day_calendar extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_calendar_main);
+        Intent intent =this.getIntent();
+        Calendar test= (Calendar) intent.getExtras().getSerializable("user");
+        int a=test.getTime().getMonth();
+        int b=test.getTime().getDate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

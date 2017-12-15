@@ -1,6 +1,9 @@
 package com.example.weathercalendar;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -13,12 +16,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        OnDateSelectedListener, OnMonthChangedListener {
+    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     //my variable
     @BindView(R.id.calendarView)
     MaterialCalendarView widget;
@@ -31,7 +46,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        ButterKnife.bind(this);
+        widget.setOnDateChangedListener(this);
+        widget.setOnDateChangedListener(this);
+        widget.setOnMonthChangedListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +67,39 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @Nullable CalendarDay date, boolean selected) {
+//        textView.setText(getSelectedDatesString());
+        Intent intent = new Intent(this, day_calendar.class);
+//        Calendar test=dateToCalendar(date.getDate());
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("user", (Serializable)dateToCalendar(date.getDate()));
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        //noinspection ConstantConditions
+//        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
+    }
+    //print english month , date(day) , month
+    private String getSelectedDatesString() {
+        CalendarDay date = widget.getSelectedDate();
+        if (date == null) {
+            return "No Selection";
+        }
+
+        return FORMATTER.format(date.getDate());
+    }
+    //Convert Date to Calendar
+    private Calendar dateToCalendar(Date date) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+
     }
 
     @Override
