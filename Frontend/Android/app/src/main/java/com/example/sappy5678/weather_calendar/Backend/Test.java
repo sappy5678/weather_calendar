@@ -1,9 +1,11 @@
 package com.example.sappy5678.weather_calendar.Backend;
 
-import android.util.Log;
+
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 import retrofit2.Response;
@@ -20,11 +22,17 @@ public class Test {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(WeatherApi.BaseUrl)
                 // 添加String支持
-                // .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
         WeatherApi service = retrofit.create(WeatherApi.class);
         Call<String> call = service.getData();
         String body = call.execute().body();
+        try {
+            WeatherParser.turnToSqlite(body);
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        // Log.d("weather",body);
 
         // 异步请求
         // call.enqueue(new Callback<String>() {
