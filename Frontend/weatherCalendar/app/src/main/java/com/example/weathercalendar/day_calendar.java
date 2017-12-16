@@ -1,10 +1,14 @@
 package com.example.weathercalendar;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.framgia.library.calendardayview.CalendarDayView;
 import com.framgia.library.calendardayview.EventView;
@@ -26,6 +31,7 @@ import com.framgia.library.calendardayview.decoration.CdvDecorationDefault;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by user on 2017/12/8.
@@ -174,6 +180,56 @@ public class day_calendar extends AppCompatActivity
 
         dayView.setEvents(events);
         dayView.setPopups(popups);
+    }
+
+    /**
+     * 当有多个权限需要申请的时候
+     * 这里以打电话和SD卡读写权限为例
+     */
+    private void requestPermissions(){
+
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.READ_CALENDAR);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.WRITE_CALENDAR);
+        }
+
+        if (!permissionList.isEmpty()){  //申请的集合不为空时，表示有需要申请的权限
+            ActivityCompat.requestPermissions(this,permissionList.toArray(new String[permissionList.size()]),1);
+        }else { //所有的权限都已经授权过了
+
+        }
+    }
+    /**
+     * 权限申请返回结果
+     * @param requestCode 请求码
+     * @param permissions 权限数组
+     * @param grantResults  申请结果数组，里面都是int类型的数
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0){ //安全写法，如果小于0，肯定会出错了
+                    for (int i = 0; i < grantResults.length; i++) {
+
+                        int grantResult = grantResults[i];
+                        if (grantResult == PackageManager.PERMISSION_DENIED){ //这个是权限拒绝
+                            String s = permissions[i];
+                            Toast.makeText(this,s+"权限被拒绝了",Toast.LENGTH_SHORT).show();
+                        }else{ //授权成功了
+                            //do Something
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
     @Override
     public void onBackPressed() {
