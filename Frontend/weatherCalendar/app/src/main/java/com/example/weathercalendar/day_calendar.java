@@ -50,9 +50,9 @@ public class day_calendar extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_calendar_main);
         Intent intent =this.getIntent();
-        Calendar test= (Calendar) intent.getExtras().getSerializable("user");
-        int a=test.getTime().getMonth();
-        int b=test.getTime().getDate();
+        Calendar calendar= (Calendar) intent.getExtras().getSerializable("user");
+        // int month=test.getTime().getMonth();
+        // int day=test.getTime().getDate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -75,7 +75,7 @@ public class day_calendar extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener((NavigationView.OnNavigationItemSelectedListener) this);
 
         dayView = (CalendarDayView) findViewById(R.id.dayView);
-        dayView.setLimitTime(9, 22);
+        dayView.setLimitTime(0, 24);
 
         ((CdvDecorationDefault) (dayView.getDecoration())).setOnEventClickListener(
                 new EventView.OnEventClickListener() {
@@ -109,7 +109,8 @@ public class day_calendar extends AppCompatActivity
                     @Override
                     public void onLoadData(PopupView view, ImageView start, ImageView end,
                                            IPopup data) {
-                        start.setImageResource(R.drawable.avatar);
+                        start.setImageResource(R.drawable.little5);
+                        end.setImageResource(R.drawable.little5);
                     }
                 });
 
@@ -125,7 +126,7 @@ public class day_calendar extends AppCompatActivity
             timeEnd.set(Calendar.HOUR_OF_DAY, 15);
             timeEnd.set(Calendar.MINUTE, 30);
             Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
-
+            event.setLocation("AAA");
             events.add(event);
         }
 
@@ -149,13 +150,13 @@ public class day_calendar extends AppCompatActivity
             timeStart.set(Calendar.HOUR_OF_DAY, 12);
             timeStart.set(Calendar.MINUTE, 0);
             Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 13);
-            timeEnd.set(Calendar.MINUTE, 30);
+            timeEnd.set(Calendar.HOUR_OF_DAY, 14);
+            timeEnd.set(Calendar.MINUTE, 0);
 
             Popup popup = new Popup();
             popup.setStartTime(timeStart);
             popup.setEndTime(timeEnd);
-            popup.setImageStart("http://sample.com/image.png");
+            popup.setImageStart("https://i.imgur.com/WRI3U4V.png");
             popup.setTitle("event 1 with title");
             popup.setDescription("Yuong alsdf");
             popups.add(popup);
@@ -175,6 +176,8 @@ public class day_calendar extends AppCompatActivity
             popup.setImageStart("http://sample.com/image.png");
             popup.setTitle("event 2 with title");
             popup.setDescription("Yuong alsdf");
+
+
             popups.add(popup);
         }
 
