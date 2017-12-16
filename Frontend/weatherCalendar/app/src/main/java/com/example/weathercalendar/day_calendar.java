@@ -185,55 +185,7 @@ public class day_calendar extends AppCompatActivity
         dayView.setPopups(popups);
     }
 
-    /**
-     * 当有多个权限需要申请的时候
-     * 这里以打电话和SD卡读写权限为例
-     */
-    private void requestPermissions(){
 
-        List<String> permissionList = new ArrayList<>();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED){
-            permissionList.add(Manifest.permission.READ_CALENDAR);
-        }
-
-        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED){
-            permissionList.add(Manifest.permission.WRITE_CALENDAR);
-        }
-
-        if (!permissionList.isEmpty()){  //申请的集合不为空时，表示有需要申请的权限
-            ActivityCompat.requestPermissions(this,permissionList.toArray(new String[permissionList.size()]),1);
-        }else { //所有的权限都已经授权过了
-
-        }
-    }
-    /**
-     * 权限申请返回结果
-     * @param requestCode 请求码
-     * @param permissions 权限数组
-     * @param grantResults  申请结果数组，里面都是int类型的数
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0){ //安全写法，如果小于0，肯定会出错了
-                    for (int i = 0; i < grantResults.length; i++) {
-
-                        int grantResult = grantResults[i];
-                        if (grantResult == PackageManager.PERMISSION_DENIED){ //这个是权限拒绝
-                            String s = permissions[i];
-                            Toast.makeText(this,s+"权限被拒绝了",Toast.LENGTH_SHORT).show();
-                        }else{ //授权成功了
-                            //do Something
-                        }
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -289,6 +241,55 @@ public class day_calendar extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    /**
+     * 当有多个权限需要申请的时候
+     * 这里以打电话和SD卡读写权限为例
+     */
+    private void requestPermissions(){
+
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.READ_CALENDAR);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.WRITE_CALENDAR);
+        }
+
+        if (!permissionList.isEmpty()){  //申请的集合不为空时，表示有需要申请的权限
+            ActivityCompat.requestPermissions(this,permissionList.toArray(new String[permissionList.size()]),1);
+        }else { //所有的权限都已经授权过了
+
+        }
+    }
+    /**
+     * 权限申请返回结果
+     * @param requestCode 请求码
+     * @param permissions 权限数组
+     * @param grantResults  申请结果数组，里面都是int类型的数
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0){ //安全写法，如果小于0，肯定会出错了
+                    for (int i = 0; i < grantResults.length; i++) {
+
+                        int grantResult = grantResults[i];
+                        if (grantResult == PackageManager.PERMISSION_DENIED){ //这个是权限拒绝
+                            String s = permissions[i];
+                            Toast.makeText(this,s+"权限被拒绝了",Toast.LENGTH_SHORT).show();
+                        }else{ //授权成功了
+                            //do Something
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
 
