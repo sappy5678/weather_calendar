@@ -87,15 +87,30 @@ public class WelcomeActivity extends Activity {
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0){ //安全写法，如果小于0，肯定会出错了
+                    int number = 0;
                     for (int i = 0; i < grantResults.length; i++) {
 
                         int grantResult = grantResults[i];
                         if (grantResult == PackageManager.PERMISSION_DENIED){ //这个是权限拒绝
                             String s = permissions[i];
-                            Toast.makeText(this,s+"权限被拒绝了",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this,"抱歉\n"+s+"是必要權限",Toast.LENGTH_LONG).show();
+
+                                // Thread.sleep(2000);
+                                finishAffinity();
+
                         }else{ //授权成功了
                             //do Something
+                            number++;
                         }
+
+                    }
+
+                    // 所有權限都通過了
+                    if (number == grantResults.length)
+                    {
+                        Intent mainIntent = new Intent(WelcomeActivity.this,MainActivity.class);
+                        WelcomeActivity.this.startActivity(mainIntent);
+                        WelcomeActivity.this.finish();
                     }
                 }
                 break;

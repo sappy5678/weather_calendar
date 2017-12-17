@@ -36,8 +36,8 @@ import java.util.List;
 /**
  * Created by user on 2017/12/8.
  */
-//public class day_calendar extends AppCompatActivity {
-public class day_calendar extends AppCompatActivity
+
+public class DayCalendar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     CalendarDayView dayView;
