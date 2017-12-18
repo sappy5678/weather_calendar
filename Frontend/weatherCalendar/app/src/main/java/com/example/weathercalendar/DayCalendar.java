@@ -3,6 +3,7 @@ package com.example.weathercalendar;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,7 +23,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.weathercalendar.Calendar.AccountCalendar;
+import com.example.weathercalendar.Calendar.pojo.Events;
 import com.framgia.library.calendardayview.CalendarDayView;
+
 import com.framgia.library.calendardayview.EventView;
 import com.framgia.library.calendardayview.PopupView;
 import com.framgia.library.calendardayview.data.IEvent;
@@ -111,77 +115,111 @@ public class DayCalendar extends AppCompatActivity
                                            IPopup data) {
                         start.setImageResource(R.drawable.little5);
                         end.setImageResource(R.drawable.little5);
+                        // view.setBackgroundColor(Color.argb(255,255,0,0));
+
                     }
                 });
 
 
-        events = new ArrayList<>();
+        // events = new ArrayList<>();
+        //
+        // {
+        //     int eventColor = ContextCompat.getColor(this, R.color.eventColor);
+        //     Calendar timeStart = Calendar.getInstance();
+        //     timeStart.set(Calendar.HOUR_OF_DAY, 11);
+        //     timeStart.set(Calendar.MINUTE, 0);
+        //     Calendar timeEnd = (Calendar) timeStart.clone();
+        //     timeEnd.set(Calendar.HOUR_OF_DAY, 15);
+        //     timeEnd.set(Calendar.MINUTE, 30);
+        //     Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
+        //     event.setLocation("AAA");
+        //     events.add(event);
+        // }
+        //
+        // {
+        //     int eventColor = ContextCompat.getColor(this, R.color.eventColor1);
+        //     Calendar timeStart = Calendar.getInstance();
+        //     timeStart.set(Calendar.HOUR_OF_DAY, 18);
+        //     timeStart.set(Calendar.MINUTE, 0);
+        //     Calendar timeEnd = (Calendar) timeStart.clone();
+        //     timeEnd.set(Calendar.HOUR_OF_DAY, 20);
+        //     timeEnd.set(Calendar.MINUTE, 30);
+        //     Event event = new Event(1, timeStart, timeEnd, "Another event", "Hockaido", eventColor);
+        //
+        //     events.add(event);
+        // }
 
+        AccountCalendar ac = new AccountCalendar(getContentResolver(),"sappy5678@gmail.com");
+        ac.updateCalendars();
+        ArrayList<Events> eventList = new ArrayList<>();
+
+        Calendar beginTime = (Calendar) calendar.clone();
+        // Calendar beginTime = Calendar.getInstance();
+        beginTime.set(Calendar.HOUR, 0);
+        beginTime.set(Calendar.MINUTE,0);
+        beginTime.set(Calendar.SECOND,0);
+        beginTime.get(Calendar.SECOND);
+
+        Calendar endTime = (Calendar) calendar.clone();
+        // Calendar endTime = Calendar.getInstance();
+        endTime.set(Calendar.HOUR, 23);
+        endTime.set(Calendar.MINUTE,59);
+        endTime.set(Calendar.SECOND,59);
+        endTime.get(Calendar.SECOND);
+        for(int i = 0; i < ac.getAccountNameList().size(); ++i)
         {
-            int eventColor = ContextCompat.getColor(this, R.color.eventColor);
-            Calendar timeStart = Calendar.getInstance();
-            timeStart.set(Calendar.HOUR_OF_DAY, 11);
-            timeStart.set(Calendar.MINUTE, 0);
-            Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 15);
-            timeEnd.set(Calendar.MINUTE, 30);
-            Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
-            event.setLocation("AAA");
-            events.add(event);
+            Log.i("Search Name",ac.getAccountNameList().get(i));
+            eventList.addAll(ac.queryEvents(ac.getAccountNameList().get(i),beginTime,endTime));
         }
-
-        {
-            int eventColor = ContextCompat.getColor(this, R.color.eventColor1);
-            Calendar timeStart = Calendar.getInstance();
-            timeStart.set(Calendar.HOUR_OF_DAY, 18);
-            timeStart.set(Calendar.MINUTE, 0);
-            Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 20);
-            timeEnd.set(Calendar.MINUTE, 30);
-            Event event = new Event(1, timeStart, timeEnd, "Another event", "Hockaido", eventColor);
-
-            events.add(event);
-        }
-
         popups = new ArrayList<>();
 
+        for(Events eventItem:eventList)
         {
-            Calendar timeStart = Calendar.getInstance();
-            timeStart.set(Calendar.HOUR_OF_DAY, 12);
-            timeStart.set(Calendar.MINUTE, 0);
-            Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 14);
-            timeEnd.set(Calendar.MINUTE, 0);
-
-            Popup popup = new Popup();
-            popup.setStartTime(timeStart);
-            popup.setEndTime(timeEnd);
-            popup.setImageStart("https://i.imgur.com/WRI3U4V.png");
-            popup.setTitle("event 1 with title");
-            popup.setDescription("Yuong alsdf");
-            popups.add(popup);
+                Popup popup = new Popup();
+                popup.setStartTime(eventItem.getBegin());
+                popup.setEndTime(eventItem.getEnd());
+                popup.setImageStart("https://i.imgur.com/WRI3U4V.png");
+                popup.setTitle(eventItem.getTitle());
+                popup.setDescription(eventItem.getDescription());
+                popups.add(popup);
         }
+        // {
+        //     Calendar timeStart = Calendar.getInstance();
+        //     timeStart.set(Calendar.HOUR_OF_DAY, 12);
+        //     timeStart.set(Calendar.MINUTE, 0);
+        //     Calendar timeEnd = (Calendar) timeStart.clone();
+        //     timeEnd.set(Calendar.HOUR_OF_DAY, 14);
+        //     timeEnd.set(Calendar.MINUTE, 0);
+        //
+        //     Popup popup = new Popup();
+        //     popup.setStartTime(timeStart);
+        //     popup.setEndTime(timeEnd);
+        //     popup.setImageStart("https://i.imgur.com/WRI3U4V.png");
+        //     popup.setTitle("event 1 with title");
+        //     popup.setDescription("Yuong alsdf");
+        //     popups.add(popup);
+        // }
+        //
+        // {
+        //     Calendar timeStart = Calendar.getInstance();
+        //     timeStart.set(Calendar.HOUR_OF_DAY, 20);
+        //     timeStart.set(Calendar.MINUTE, 0);
+        //     Calendar timeEnd = (Calendar) timeStart.clone();
+        //     timeEnd.set(Calendar.HOUR_OF_DAY, 22);
+        //     timeEnd.set(Calendar.MINUTE, 0);
+        //
+        //     Popup popup = new Popup();
+        //     popup.setStartTime(timeStart);
+        //     popup.setEndTime(timeEnd);
+        //     popup.setImageStart("http://sample.com/image.png");
+        //     popup.setTitle("event 2 with title");
+        //     popup.setDescription("Yuong alsdf");
+        //
+        //
+        //     popups.add(popup);
+        // }
 
-        {
-            Calendar timeStart = Calendar.getInstance();
-            timeStart.set(Calendar.HOUR_OF_DAY, 20);
-            timeStart.set(Calendar.MINUTE, 0);
-            Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 22);
-            timeEnd.set(Calendar.MINUTE, 0);
-
-            Popup popup = new Popup();
-            popup.setStartTime(timeStart);
-            popup.setEndTime(timeEnd);
-            popup.setImageStart("http://sample.com/image.png");
-            popup.setTitle("event 2 with title");
-            popup.setDescription("Yuong alsdf");
-
-
-            popups.add(popup);
-        }
-
-        dayView.setEvents(events);
+        // dayView.setEvents(events);
         dayView.setPopups(popups);
     }
 
