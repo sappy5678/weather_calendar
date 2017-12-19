@@ -1,36 +1,26 @@
 package com.example.weathercalendar.Backend.pojo;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by sappy5678 on 12/14/17.
  */
 
 public class Rain {
-    private String endtime;
+    private Calendar endtime;
 
     private String id;
 
-    private String starttime;
+    private Calendar starttime;
 
     private String location;
 
     private String value;
 
-    public Timestamp getEndtime ()
-    {
-        return Timestamp.valueOf(endtime);
-    }
-
-    public void setEndtime (String endtime)
-    {
-        this.endtime = endtime;
-    }
-
-    public void setEndtime (Timestamp endtime)
-    {
-        this.endtime = endtime.toString();
-    }
 
     public String getId ()
     {
@@ -42,20 +32,6 @@ public class Rain {
         this.id = id;
     }
 
-    public Timestamp getStarttime ()
-    {
-        return Timestamp.valueOf(starttime);
-    }
-
-    public void setStarttime (String starttime)
-    {
-        this.starttime = starttime;
-    }
-
-    public void setStarttime (Timestamp starttime)
-    {
-        this.starttime = starttime.toString();
-    }
 
 
     public String getLocation ()
@@ -77,6 +53,22 @@ public class Rain {
     public void setValue (String value)
     {
         this.value = value;
+    }
+
+    public Calendar getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(Calendar endtime) {
+        this.endtime = endtime;
+    }
+
+    public Calendar getStarttime() {
+        return starttime;
+    }
+
+    public void setStarttime(Calendar starttime) {
+        this.starttime = starttime;
     }
 
     @Override

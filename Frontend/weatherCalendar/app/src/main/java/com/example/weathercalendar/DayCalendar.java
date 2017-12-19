@@ -27,7 +27,9 @@ import com.example.weathercalendar.Backend.WeatherApi;
 import com.example.weathercalendar.Backend.WeatherApiCreater;
 import com.example.weathercalendar.Backend.pojo.Rain;
 import com.example.weathercalendar.Calendar.AccountCalendar;
+import com.example.weathercalendar.Calendar.CustomDecoration;
 import com.example.weathercalendar.Calendar.pojo.Events;
+import com.example.weathercalendar.Gravatar.MD5Util;
 import com.framgia.library.calendardayview.CalendarDayView;
 
 import com.framgia.library.calendardayview.EventView;
@@ -81,6 +83,7 @@ public class DayCalendar extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -88,7 +91,7 @@ public class DayCalendar extends AppCompatActivity
 
         dayView = (CalendarDayView) findViewById(R.id.dayView);
         dayView.setLimitTime(0, 24);
-
+        dayView.setDecorator(new CustomDecoration(getApplicationContext()));
         ((CdvDecorationDefault) (dayView.getDecoration())).setOnEventClickListener(
                 new EventView.OnEventClickListener() {
                     @Override
@@ -139,9 +142,11 @@ public class DayCalendar extends AppCompatActivity
             public void onResponse(Call<List<Rain>> call, Response<List<Rain>> response) {
                 // 处理返回数据
                 if (response.isSuccessful()) {
-                    Log.e("Error", "onResponse: " + response.body().get(0).getLocation());
-                    Toast.makeText(DayCalendar.this,"Success",Toast.LENGTH_LONG).show();
+                    Log.i("[WeatherApi]", "get Response");
+                    // Toast.makeText(DayCalendar.this,"Success",Toast.LENGTH_LONG).show();
 
+                    if(response.body().size() != 0)
+                        drawWeather(response.body());
                 }
             }
 
@@ -153,19 +158,7 @@ public class DayCalendar extends AppCompatActivity
 
 
         });
-        {
-            int eventColor = Color.argb(255,0,0,255);
-            // int eventColor = ContextCompat.getColor(this, Color.argb());
-            Calendar timeStart = Calendar.getInstance();
-            timeStart.set(Calendar.HOUR_OF_DAY, 11);
-            timeStart.set(Calendar.MINUTE, 0);
-            Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 15);
-            timeEnd.set(Calendar.MINUTE, 30);
-            Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
-            event.setLocation("AAA");
-            events.add(event);
-        }
+
         // {
         //     int eventColor = ContextCompat.getColor(this, R.color.eventColor);
         //     Calendar timeStart = Calendar.getInstance();
@@ -196,6 +189,8 @@ public class DayCalendar extends AppCompatActivity
         ac.updateCalendars();
         ArrayList<Events> eventList = new ArrayList<>();
 
+
+
         assert calendar != null;
         Calendar beginTime = (Calendar) calendar.clone();
         // Calendar beginTime = Calendar.getInstance();
@@ -217,15 +212,22 @@ public class DayCalendar extends AppCompatActivity
         }
         popups = new ArrayList<>();
 
+
+
+
+
         for(Events eventItem:eventList)
         {
-                Popup popup = new Popup();
-                popup.setStartTime(eventItem.getBegin());
-                popup.setEndTime(eventItem.getEnd());
-                popup.setImageStart("https://i.imgur.com/WRI3U4V.png");
-                popup.setTitle(eventItem.getTitle());
-                popup.setDescription(eventItem.getDescription());
-                popups.add(popup);
+            Popup popup = new Popup();
+            popup.setStartTime(eventItem.getBegin());
+            popup.setEndTime(eventItem.getEnd());
+            // String email = "sappy5678@gmail.com";
+            String email = eventItem.getOrganizer();
+            String hash = MD5Util.md5Hex(email);
+            popup.setImageStart("https://secure.gravatar.com/avatar/"+hash+"?size=200");
+            popup.setTitle(eventItem.getTitle());
+            popup.setDescription(eventItem.getDescription());
+            popups.add(popup);
         }
         // {
         //     Calendar timeStart = Calendar.getInstance();
@@ -263,8 +265,28 @@ public class DayCalendar extends AppCompatActivity
         //     popups.add(popup);
         // }
 
-        dayView.setEvents(events);
+        // dayView.setEvents(events);
         dayView.setPopups(popups);
+    }
+
+    public void drawWeather(List<Rain> rainList)
+    {
+        for(Rain rain:rainList)
+        {
+            int eventColor = Color.argb(100,0,0,255);
+            // int eventColor = ContextCompat.getColor(this, Color.argb());
+            Calendar timeStart = Calendar.getInstance();
+            timeStart.set(Calendar.HOUR_OF_DAY, 11);
+            timeStart.set(Calendar.MINUTE, 0);
+            Calendar timeEnd = (Calendar) timeStart.clone();
+            timeEnd.set(Calendar.HOUR_OF_DAY, 15);
+            timeEnd.set(Calendar.MINUTE, 30);
+            Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
+            event.setLocation("AAA");
+
+            events.add(event);
+        }
+        dayView.setEvents(events);
     }
 
 

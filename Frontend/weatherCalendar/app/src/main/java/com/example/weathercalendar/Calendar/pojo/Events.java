@@ -12,6 +12,7 @@ public class Events {
     private Calendar begin = Calendar.getInstance();
     private Calendar end = Calendar.getInstance();;
     private String description;
+    private String organizer;
 
 
     public Integer getId() {
@@ -57,5 +58,13 @@ public class Events {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
     }
 }
