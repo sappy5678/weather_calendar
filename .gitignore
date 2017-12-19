@@ -5,3 +5,4 @@
 !./.elasticbeanstalk/config.yml
 !./.elasticbeanstalk/*.global.yml
 Test/
+/Backend/test/
