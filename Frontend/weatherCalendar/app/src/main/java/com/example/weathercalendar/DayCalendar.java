@@ -23,6 +23,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.weathercalendar.Backend.WeatherApi;
+import com.example.weathercalendar.Backend.WeatherApiCreater;
+import com.example.weathercalendar.Backend.pojo.Rain;
 import com.example.weathercalendar.Calendar.AccountCalendar;
 import com.example.weathercalendar.Calendar.pojo.Events;
 import com.framgia.library.calendardayview.CalendarDayView;
@@ -37,6 +40,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by user on 2017/12/8.
  */
@@ -48,6 +55,7 @@ public class DayCalendar extends AppCompatActivity
 
     ArrayList<IEvent> events;
     ArrayList<IPopup> popups;
+    AccountCalendar ac;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +129,43 @@ public class DayCalendar extends AppCompatActivity
                 });
 
 
-        // events = new ArrayList<>();
-        //
+        events = new ArrayList<>();
+
+        WeatherApi weatherApi= new WeatherApiCreater().creat();
+        Call<List<Rain>> call = weatherApi.getRainList(20171221,"臺北市");
+        // 异步请求
+        call.enqueue(new Callback<List<Rain>>() {
+            @Override
+            public void onResponse(Call<List<Rain>> call, Response<List<Rain>> response) {
+                // 处理返回数据
+                if (response.isSuccessful()) {
+                    Log.e("Error", "onResponse: " + response.body().get(0).getLocation());
+                    Toast.makeText(DayCalendar.this,"Success",Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Rain>> call, Throwable t) {
+                Log.e("Error", "onFailure: 请求数据失败");
+                Toast.makeText(DayCalendar.this,"Fail",Toast.LENGTH_LONG).show();;
+            }
+
+
+        });
+        {
+            int eventColor = Color.argb(255,0,0,255);
+            // int eventColor = ContextCompat.getColor(this, Color.argb());
+            Calendar timeStart = Calendar.getInstance();
+            timeStart.set(Calendar.HOUR_OF_DAY, 11);
+            timeStart.set(Calendar.MINUTE, 0);
+            Calendar timeEnd = (Calendar) timeStart.clone();
+            timeEnd.set(Calendar.HOUR_OF_DAY, 15);
+            timeEnd.set(Calendar.MINUTE, 30);
+            Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
+            event.setLocation("AAA");
+            events.add(event);
+        }
         // {
         //     int eventColor = ContextCompat.getColor(this, R.color.eventColor);
         //     Calendar timeStart = Calendar.getInstance();
@@ -149,10 +192,11 @@ public class DayCalendar extends AppCompatActivity
         //     events.add(event);
         // }
 
-        AccountCalendar ac = new AccountCalendar(getContentResolver(),"sappy5678@gmail.com");
+        ac = new AccountCalendar(getContentResolver(),"sappy5678@gmail.com");
         ac.updateCalendars();
         ArrayList<Events> eventList = new ArrayList<>();
 
+        assert calendar != null;
         Calendar beginTime = (Calendar) calendar.clone();
         // Calendar beginTime = Calendar.getInstance();
         beginTime.set(Calendar.HOUR, 0);
@@ -219,7 +263,7 @@ public class DayCalendar extends AppCompatActivity
         //     popups.add(popup);
         // }
 
-        // dayView.setEvents(events);
+        dayView.setEvents(events);
         dayView.setPopups(popups);
     }
 

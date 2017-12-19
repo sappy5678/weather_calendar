@@ -53,13 +53,15 @@ public class Test extends AppCompatActivity {
         ////////////////////////////////////////////////////////
 
         ///////////////// Test Calendar Provider Api ///////////////
-        AccountCalendar account = new AccountCalendar(getContentResolver(),"sappy5678@gmail.com");
-        // account.updateCalendars();
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2017, 0, 1, 8, 0);
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2018, 4, 1, 8, 0);
-        account.queryEvents("ITAC",beginTime,endTime);
+
+        // 行事曆
+        // AccountCalendar account = new AccountCalendar(getContentResolver(),"sappy5678@gmail.com");
+        // // account.updateCalendars();
+        // Calendar beginTime = Calendar.getInstance();
+        // beginTime.set(2017, 0, 1, 8, 0);
+        // Calendar endTime = Calendar.getInstance();
+        // endTime.set(2018, 4, 1, 8, 0);
+        // account.queryEvents("ITAC",beginTime,endTime);
 
 
         ////////////////////////////////////////////////////////////
