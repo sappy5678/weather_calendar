@@ -1,5 +1,7 @@
 package com.example.weathercalendar.Backend.pojo;
 
+import android.util.Log;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,11 +13,11 @@ import java.util.Locale;
  */
 
 public class Rain {
-    private Calendar endtime;
+    private String endtime;
 
     private String id;
 
-    private Calendar starttime;
+    private String starttime;
 
     private String location;
 
@@ -55,20 +57,50 @@ public class Rain {
         this.value = value;
     }
 
-    public Calendar getEndtime() {
-        return endtime;
+    public Calendar getEndtime()  {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss", Locale.ENGLISH);
+        try {
+            cal.setTime(sdf.parse(this.endtime));// all done
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.i("Time",cal.toString());
+        return cal;
     }
 
-    public void setEndtime(Calendar endtime) {
+    public void setEndtime(String endtime) {
         this.endtime = endtime;
     }
 
+    public void setEndtime(Calendar endtime) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        String s = sdf.format(endtime);// all done
+
+        this.endtime = s;
+    }
+
     public Calendar getStarttime() {
-        return starttime;
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        try {
+            cal.setTime(sdf.parse(this.starttime));// all done
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return cal;
+    }
+
+    public void setStarttime(String starttime) {
+        this.starttime = starttime;
     }
 
     public void setStarttime(Calendar starttime) {
-        this.starttime = starttime;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+        String s = sdf.format(starttime);// all done
+
+        this.starttime = s;
     }
 
     @Override

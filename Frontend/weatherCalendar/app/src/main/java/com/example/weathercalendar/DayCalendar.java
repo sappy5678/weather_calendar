@@ -135,6 +135,8 @@ public class DayCalendar extends AppCompatActivity
         events = new ArrayList<>();
 
         WeatherApi weatherApi= new WeatherApiCreater().creat();
+        // TODO 天氣查詢要符合時間
+        // TODO 能夠新增 刪除 修改 事件
         Call<List<Rain>> call = weatherApi.getRainList(20171221,"臺北市");
         // 异步请求
         call.enqueue(new Callback<List<Rain>>() {
@@ -194,14 +196,14 @@ public class DayCalendar extends AppCompatActivity
         assert calendar != null;
         Calendar beginTime = (Calendar) calendar.clone();
         // Calendar beginTime = Calendar.getInstance();
-        beginTime.set(Calendar.HOUR, 0);
+        beginTime.set(Calendar.HOUR_OF_DAY, 0);
         beginTime.set(Calendar.MINUTE,0);
         beginTime.set(Calendar.SECOND,0);
         beginTime.get(Calendar.SECOND);
 
         Calendar endTime = (Calendar) calendar.clone();
         // Calendar endTime = Calendar.getInstance();
-        endTime.set(Calendar.HOUR, 23);
+        endTime.set(Calendar.HOUR_OF_DAY, 23);
         endTime.set(Calendar.MINUTE,59);
         endTime.set(Calendar.SECOND,59);
         endTime.get(Calendar.SECOND);
@@ -273,14 +275,50 @@ public class DayCalendar extends AppCompatActivity
     {
         for(Rain rain:rainList)
         {
+            if(Integer.valueOf(rain.getValue()) <= 30)
+            {
+                continue;
+            }
             int eventColor = Color.argb(100,0,0,255);
             // int eventColor = ContextCompat.getColor(this, Color.argb());
-            Calendar timeStart = Calendar.getInstance();
-            timeStart.set(Calendar.HOUR_OF_DAY, 11);
-            timeStart.set(Calendar.MINUTE, 0);
-            Calendar timeEnd = (Calendar) timeStart.clone();
-            timeEnd.set(Calendar.HOUR_OF_DAY, 15);
-            timeEnd.set(Calendar.MINUTE, 30);
+            // Calendar timeStart = Calendar.getInstance();
+            // timeStart.set(Calendar.HOUR_OF_DAY, 11);
+            // timeStart.set(Calendar.MINUTE, 0);
+            // Calendar timeEnd = (Calendar) timeStart.clone();
+            // timeEnd.set(Calendar.HOUR_OF_DAY, 15);
+            // timeEnd.set(Calendar.MINUTE, 30);
+
+
+
+            Calendar timeStart = rain.getStarttime();
+            Calendar timeEnd = rain.getEndtime();
+            Calendar beginTime = Calendar.getInstance();
+            // Calendar beginTime = Calendar.getInstance();
+            beginTime.set(Calendar.HOUR_OF_DAY, 0);
+            beginTime.set(Calendar.MINUTE,0);
+            beginTime.set(Calendar.SECOND,0);
+            beginTime.getTime();
+
+            Calendar endTime = Calendar.getInstance();
+            // Calendar endTime = Calendar.getInstance();
+            endTime.set(Calendar.HOUR_OF_DAY, 23);
+            endTime.set(Calendar.MINUTE,59);
+            endTime.set(Calendar.SECOND,59);
+            endTime.getTime();
+
+            // 設定在時間範圍內
+            Log.i("Time  Compare",String.valueOf(timeEnd.after(endTime)));
+            Log.i("End Time",endTime.getTime().toString());
+            Log.i("End Time",timeEnd.getTime().toString());
+            if(timeStart.before(beginTime))
+            {
+                timeStart = (Calendar) beginTime.clone();
+            }
+            if(timeEnd.after(endTime))
+            {
+                timeEnd = (Calendar) endTime.clone();
+            }
+
             Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
             event.setLocation("AAA");
 
