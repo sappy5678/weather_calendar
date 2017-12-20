@@ -1,6 +1,8 @@
 package com.example.weathercalendar;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.support.design.widget.Snackbar;
 //import android.support.v4.app.ActivityCompat;
 //import android.support.v4.content.ContextCompat;
 
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +22,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.weathercalendar.Calendar.AccountCalendar;
+import com.example.weathercalendar.Calendar.decorators.HighlightWeekendsDecorator;
+import com.example.weathercalendar.Calendar.decorators.OneDayDecorator;
+import com.example.weathercalendar.Calendar.pojo.Events;
+import com.example.weathercalendar.Calendar.decorators.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -27,8 +35,12 @@ import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +50,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OnDateSelectedListener, OnMonthChangedListener {
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
     //my variable
     @BindView(R.id.calendarView)
     MaterialCalendarView widget;
@@ -53,6 +66,16 @@ public class MainActivity extends AppCompatActivity
         widget.setOnDateChangedListener(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
+        //秀出整張表的日期 不限制當月日期
+        widget.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
+        //高亮週末與當天粗體
+        widget.addDecorators(
+//                new MySelectorDecorator(this),
+                new HighlightWeekendsDecorator(),
+                oneDayDecorator
+        );
+        //背景thread跑事件紅點
+        new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +109,7 @@ public class MainActivity extends AppCompatActivity
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
         //noinspection ConstantConditions
 //        getSupportActionBar().setTitle(FORMATTER.format(date.getDate()));
+        new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
     }
     //print english month , date(day) , month
     private String getSelectedDatesString() {
@@ -162,6 +186,90 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    protected ArrayList<CalendarDay> checkMonthEvent(ArrayList<CalendarDay> EventCalendarDay)
+    {
+        AccountCalendar ac;
+        CalendarDay date=widget.getCurrentDate();
+        //開始時間與結束時間設置成該月一號與下一月的一號
+        Date beginDate=new Date(date.getDate().toString());
+        Date endDate=new Date(date.getDate().toString());
+        beginDate.setDate(1);
+        endDate.setMonth(endDate.getMonth()%12+1);
+        endDate.setDate(1);
+        ac = new AccountCalendar(getContentResolver(),getResources().getString(R.string.targetAccount));
+        ac.updateCalendars();
+        ArrayList<Events> eventList = new ArrayList<>();
+        Calendar beginTime = Calendar.getInstance();
+        // Calendar beginTime = Calendar.getInstance();
+        beginTime.set(Calendar.YEAR,beginDate.getYear()+1900);
+        beginTime.set(Calendar.MONTH,beginDate.getMonth());
+        beginTime.set(Calendar.DATE,beginDate.getDate());
+        beginTime.set(Calendar.HOUR, 0);
+        beginTime.set(Calendar.MINUTE,0);
+        beginTime.set(Calendar.SECOND,0);
+        beginTime.get(Calendar.SECOND);
+
+        Calendar endTime = Calendar.getInstance();
+        // Calendar endTime = Calendar.getInstance();
+        endTime.set(Calendar.YEAR,endDate.getYear()+1900);
+        endTime.set(Calendar.MONTH,endDate.getMonth());
+        endTime.set(Calendar.DATE,endDate.getDate());
+        endTime.set(Calendar.HOUR, 23);
+        endTime.set(Calendar.MINUTE,59);
+        endTime.set(Calendar.SECOND,59);
+        endTime.get(Calendar.SECOND);
+        for(int i = 0; i < ac.getAccountNameList().size(); ++i)
+        {
+            Log.i("Search Name",ac.getAccountNameList().get(i));
+            eventList.addAll(ac.queryEvents(ac.getAccountNameList().get(i),beginTime,endTime));
+        }
+        Iterator<Events> iterator = eventList.iterator();
+        while(iterator.hasNext()){
+            Events temp=iterator.next();
+//            if(temp.getBegin().getTime().getMonth()!=date.getMonth()){
+//                iterator.remove();
+//            }
+            //活動開始天加上紅點
+            CalendarDay day = CalendarDay.from(temp.getBegin());
+            EventCalendarDay.add(day);
+            //用來新增如果跨天的話（兩天）結束那天也加紅點
+            if(!(temp.getBegin().getTime().getYear()==temp.getEnd().getTime().getYear()
+                    &&temp.getBegin().getTime().getMonth()==temp.getEnd().getTime().getMonth()
+                    &&temp.getBegin().getTime().getDate()==temp.getEnd().getTime().getDate()))
+            {
+                day = CalendarDay.from(temp.getEnd());
+                EventCalendarDay.add(day);
+            }
+
+        }
+        return EventCalendarDay;
+    }
+    //使用背景tread跑，加裝飾
+    private class ApiSimulator extends AsyncTask<Void, Void, List<CalendarDay>> {
+
+        @Override
+        protected List<CalendarDay> doInBackground(@NonNull Void... voids) {
+//            try {
+//                Thread.sleep(2000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            ArrayList<CalendarDay> dates= new ArrayList<>();
+            checkMonthEvent(dates);
+            return dates;
+        }
+
+        @Override
+        protected void onPostExecute(@NonNull List<CalendarDay> calendarDays) {
+            super.onPostExecute(calendarDays);
+
+            if (isFinishing()) {
+                return;
+            }
+
+            widget.addDecorator(new EventDecorator(Color.RED, calendarDays));
+        }
+    }
 
 
 

@@ -187,7 +187,7 @@ public class DayCalendar extends AppCompatActivity
         //     events.add(event);
         // }
 
-        ac = new AccountCalendar(getContentResolver(),"sappy5678@gmail.com");
+        ac = new AccountCalendar(getContentResolver(),getResources().getString(R.string.targetAccount));
         ac.updateCalendars();
         ArrayList<Events> eventList = new ArrayList<>();
 
