@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Calendar.decorators;
+package com.example.weathercalendar.calendar.decorators;
 
 import android.graphics.Typeface;
 import android.text.style.RelativeSizeSpan;

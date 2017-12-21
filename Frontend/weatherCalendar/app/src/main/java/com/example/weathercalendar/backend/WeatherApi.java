@@ -1,5 +1,6 @@
-package com.example.weathercalendar.Backend;
-import com.example.weathercalendar.Backend.pojo.Rain;
+package com.example.weathercalendar.backend;
+
+import com.example.weathercalendar.backend.pojo.Rain;
 
 import java.util.List;
 

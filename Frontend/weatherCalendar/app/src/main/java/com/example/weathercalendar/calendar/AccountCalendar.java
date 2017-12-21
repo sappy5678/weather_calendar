@@ -1,21 +1,16 @@
-package com.example.weathercalendar.Calendar;
+package com.example.weathercalendar.calendar;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 
-import com.example.weathercalendar.Calendar.pojo.Events;
+import com.example.weathercalendar.calendar.pojo.Events;
 
 import java.util.ArrayList;
 import java.util.Calendar;

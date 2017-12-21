@@ -1,8 +1,7 @@
-package com.example.weathercalendar.Backend.pojo;
+package com.example.weathercalendar.backend.pojo;
 
 import android.util.Log;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

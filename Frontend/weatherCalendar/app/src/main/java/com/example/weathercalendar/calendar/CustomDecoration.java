@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Calendar;
+package com.example.weathercalendar.calendar;
 
 import android.content.Context;
 import android.graphics.Rect;

@@ -10,14 +10,14 @@ import threading,time
 class WeeklyWeatherCrawler(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        print("Get Start")
+
         pass
 
     def run(self):
 
         t = DataBase.DBModel.Temperature()
         while True:
-
+            print("Start Crawler")
             URI = "{urn:cwb:gov:tw:cwbcommon:0.1}"
             api = "http://opendata.cwb.gov.tw/govdownload?dataid=F-D0047-091&authorizationkey=rdec-key-123-45678-011121314"
             respond = requests.get(api)

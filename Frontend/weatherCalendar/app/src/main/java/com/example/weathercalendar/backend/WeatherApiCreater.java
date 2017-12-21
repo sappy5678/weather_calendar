@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Backend;
+package com.example.weathercalendar.backend;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

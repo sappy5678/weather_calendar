@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Calendar.pojo;
+package com.example.weathercalendar.calendar.pojo;
 
 import java.util.Calendar;
 

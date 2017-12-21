@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Backend.pojo;
+package com.example.weathercalendar.backend.pojo;
 
 /**
  * Created by sappy5678 on 12/15/17.

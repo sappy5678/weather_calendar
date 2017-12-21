@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Gravatar;
+package com.example.weathercalendar.gravatar;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

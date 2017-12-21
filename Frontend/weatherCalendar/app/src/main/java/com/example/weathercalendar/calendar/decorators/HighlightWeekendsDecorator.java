@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Calendar.decorators;
+package com.example.weathercalendar.calendar.decorators;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

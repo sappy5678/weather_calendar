@@ -22,11 +22,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.weathercalendar.Calendar.AccountCalendar;
-import com.example.weathercalendar.Calendar.decorators.HighlightWeekendsDecorator;
-import com.example.weathercalendar.Calendar.decorators.OneDayDecorator;
-import com.example.weathercalendar.Calendar.pojo.Events;
-import com.example.weathercalendar.Calendar.decorators.EventDecorator;
+import com.example.weathercalendar.calendar.AccountCalendar;
+import com.example.weathercalendar.calendar.decorators.HighlightWeekendsDecorator;
+import com.example.weathercalendar.calendar.decorators.OneDayDecorator;
+import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.calendar.decorators.EventDecorator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;

@@ -2,21 +2,6 @@ package com.example.weathercalendar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-
-import com.example.weathercalendar.Backend.WeatherApi;
-import com.example.weathercalendar.Backend.pojo.Rain;
-import com.example.weathercalendar.Calendar.AccountCalendar;
-
-import java.util.Calendar;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class Test extends AppCompatActivity {
 

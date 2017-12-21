@@ -1,4 +1,4 @@
-package com.example.weathercalendar.Calendar.pojo;
+package com.example.weathercalendar.calendar.pojo;
 
 import java.util.ArrayList;
 
@@ -6,16 +6,22 @@ import java.util.ArrayList;
  * Created by sappy5678 on 12/18/17.
  */
 
-public class Account {
+public class Calendars {
 
     private Integer id;
     private String displayName;
-    private ArrayList<Calendars> events;
+    private ArrayList<Events> events;
 
-    public Account(Integer id, String displayName) {
+
+    // constructor
+    public Calendars(Integer id, String displayName) {
         this.id = id;
         this.displayName = displayName;
     }
+
+
+    // getter and setter
+
 
     public Integer getId() {
         return id;
@@ -33,11 +39,11 @@ public class Account {
         this.displayName = displayName;
     }
 
-    public ArrayList<Calendars> getEvents() {
+    public ArrayList<Events> getEvents() {
         return events;
     }
 
-    public void setEvents(ArrayList<Calendars> events) {
+    public void setEvents(ArrayList<Events> events) {
         this.events = events;
     }
 }

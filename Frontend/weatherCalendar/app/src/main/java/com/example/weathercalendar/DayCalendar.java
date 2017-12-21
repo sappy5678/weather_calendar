@@ -23,13 +23,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.weathercalendar.Backend.WeatherApi;
-import com.example.weathercalendar.Backend.WeatherApiCreater;
-import com.example.weathercalendar.Backend.pojo.Rain;
-import com.example.weathercalendar.Calendar.AccountCalendar;
-import com.example.weathercalendar.Calendar.CustomDecoration;
-import com.example.weathercalendar.Calendar.pojo.Events;
-import com.example.weathercalendar.Gravatar.MD5Util;
+import com.example.weathercalendar.backend.WeatherApi;
+import com.example.weathercalendar.backend.WeatherApiCreater;
+import com.example.weathercalendar.backend.pojo.Rain;
+import com.example.weathercalendar.calendar.AccountCalendar;
+import com.example.weathercalendar.calendar.CustomDecoration;
+import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.gravatar.MD5Util;
 import com.framgia.library.calendardayview.CalendarDayView;
 
 import com.framgia.library.calendardayview.EventView;

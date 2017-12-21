@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "226259633234",
+    "firebase_url": "https://clean-healer-189213.firebaseio.com",
+    "project_id": "clean-healer-189213",
+    "storage_bucket": "clean-healer-189213.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226259633234:android:019aaecd986bbca7",
+        "android_client_info": {
+          "package_name": "com.example.weathercalendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226259633234-vsv0h31pv92iarejfs6qn1p1ef6lhfjp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.weathercalendar",
+            "certificate_hash": "106518440eb9f33c8bb354dacf86208936adbbb1"
+          }
+        },
+        {
+          "client_id": "226259633234-rva2acpf9vm8ilua9qiqpif5753b60fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJU47WRaUSFbyTyXO0Q2GfjiRVkxlnpHA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226259633234-rva2acpf9vm8ilua9qiqpif5753b60fm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226259633234:android:04fb53477ca73456",
+        "android_client_info": {
+          "package_name": "com.example.weathercalendar.backend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226259633234-rva2acpf9vm8ilua9qiqpif5753b60fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJU47WRaUSFbyTyXO0Q2GfjiRVkxlnpHA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
