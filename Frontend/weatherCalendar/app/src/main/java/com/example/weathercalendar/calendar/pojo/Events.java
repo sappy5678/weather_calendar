@@ -10,9 +10,10 @@ public class Events {
     private Integer id;
     private String title;
     private Calendar begin = Calendar.getInstance();
-    private Calendar end = Calendar.getInstance();;
+    private Calendar end = Calendar.getInstance();
     private String description;
     private String organizer;
+    private String calendar;
 
 
     public Integer getId() {
@@ -66,5 +67,13 @@ public class Events {
 
     public void setOrganizer(String organizer) {
         this.organizer = organizer;
+    }
+
+    public String getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(String calendar) {
+        this.calendar = calendar;
     }
 }

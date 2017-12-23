@@ -13,7 +13,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class WeatherApiCreater {
 
-    public WeatherApi creat()
+    public WeatherApi create()
     {
         // 建立 gson parser 去 parser calendar
         Gson gson = new GsonBuilder()

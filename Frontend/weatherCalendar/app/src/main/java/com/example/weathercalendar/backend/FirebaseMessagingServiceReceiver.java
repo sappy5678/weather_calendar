@@ -3,6 +3,7 @@ package com.example.weathercalendar.backend;
 
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -15,6 +16,8 @@ public class FirebaseMessagingServiceReceiver extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d("FCM", "onMessageReceived:" + remoteMessage.getFrom());
+        String s = FirebaseInstanceId.getInstance().getToken();
+        Log.e("[Token]", s);
 
     }
 }

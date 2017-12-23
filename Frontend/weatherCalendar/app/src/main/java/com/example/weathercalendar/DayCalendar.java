@@ -134,7 +134,7 @@ public class DayCalendar extends AppCompatActivity
 
         events = new ArrayList<>();
 
-        WeatherApi weatherApi= new WeatherApiCreater().creat();
+        WeatherApi weatherApi = new WeatherApiCreater().create();
         // TODO 天氣查詢要符合時間
         // TODO 能夠新增 刪除 修改 事件
         Call<List<Rain>> call = weatherApi.getRainList(20171221,"臺北市");

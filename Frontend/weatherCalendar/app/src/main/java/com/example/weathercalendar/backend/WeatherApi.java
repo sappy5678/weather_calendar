@@ -1,11 +1,15 @@
 package com.example.weathercalendar.backend;
 
 import com.example.weathercalendar.backend.pojo.Rain;
+import com.example.weathercalendar.calendar.pojo.Events;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -25,5 +29,11 @@ public interface WeatherApi {
 
     @GET("api/v1/temperature/{date}/{location}")
     Call<List<Rain>> getTemperatureList(@Path("date") int date,@Path("location") String location);
+
+    @GET("api/v1/register/{token}")
+    Call<String> sendToken(@Path("token") String token);
+
+    @POST("api/v1/calendars/{token}")
+    Call<String> sendCalendars(@Path("token") String token, @Body ArrayList<Events> events);
 }
 

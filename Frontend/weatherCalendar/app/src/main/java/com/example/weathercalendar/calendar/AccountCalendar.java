@@ -203,6 +203,7 @@ public class AccountCalendar {
                 event.setTitle(title);
                 event.setDescription(description);
                 event.setOrganizer(organizer);
+                event.setCalendar(targetCalendar);
                 eventList.add(event);
 
             }

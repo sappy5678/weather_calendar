@@ -21,12 +21,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.weathercalendar.backend.WeatherApi;
+import com.example.weathercalendar.backend.WeatherApiCreater;
 import com.example.weathercalendar.calendar.AccountCalendar;
 import com.example.weathercalendar.calendar.decorators.HighlightWeekendsDecorator;
 import com.example.weathercalendar.calendar.decorators.OneDayDecorator;
 import com.example.weathercalendar.calendar.pojo.Events;
 import com.example.weathercalendar.calendar.decorators.EventDecorator;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -44,6 +48,9 @@ import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -93,6 +100,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @Nullable CalendarDay date, boolean selected) {
@@ -270,7 +278,6 @@ public class MainActivity extends AppCompatActivity
             widget.addDecorator(new EventDecorator(Color.RED, calendarDays));
         }
     }
-
 
 
 }
