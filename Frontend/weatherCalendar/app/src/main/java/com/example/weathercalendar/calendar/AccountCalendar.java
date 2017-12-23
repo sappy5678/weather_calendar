@@ -142,6 +142,7 @@ public class AccountCalendar {
                 CalendarContract.Instances.TITLE,         // 3 活動標題
                 CalendarContract.Instances.DESCRIPTION,   // 4 活動內容
                 CalendarContract.Instances.ORGANIZER,     // 5 主辦人（單位）的email
+                CalendarContract.Instances.EVENT_LOCATION // 6 位置
 
         };
         // 根據上面的設定，定義各資料的索引，提高代碼的可讀性
@@ -151,6 +152,7 @@ public class AccountCalendar {
         int PROJECTION_TITLE_INDEX = 3;
         int PROJECTION_DESCRIPTION_INDEX = 4;
         int PROJECTION_ORGANIZER_INDEX = 5;
+        int PROJECTION_EVENT_LOCATION_INDEX = 6;
         // 取得在EditText的日歷ID
         // String targetCalendar = ((EditText) findViewById(R.id.calendar_id)).getText().toString();
         // 指定一個時間段，查詢以下時間內的所有活動
@@ -186,6 +188,7 @@ public class AccountCalendar {
                 String title = null;
                 String description = null;
                 String organizer = null;
+                String location = null;
                 // 取得所需的資料
                 eventID = cur.getLong(PROJECTION_ID_INDEX);
                 beginVal = cur.getLong(PROJECTION_BEGIN_INDEX);
@@ -193,6 +196,7 @@ public class AccountCalendar {
                 title = cur.getString(PROJECTION_TITLE_INDEX);
                 description = cur.getString(PROJECTION_DESCRIPTION_INDEX);
                 organizer = cur.getString(PROJECTION_ORGANIZER_INDEX);
+                location = cur.getString(PROJECTION_EVENT_LOCATION_INDEX);
                 // Log.i("query_event", String.format("eventID=%s", eventID));
                 // Log.i("query_event", String.format("beginVal=%s", beginVal));
                 // Log.i("query_event", String.format("title=%s", title));
@@ -204,6 +208,7 @@ public class AccountCalendar {
                 event.setDescription(description);
                 event.setOrganizer(organizer);
                 event.setCalendar(targetCalendar);
+                event.setLocation(location);
                 eventList.add(event);
 
             }

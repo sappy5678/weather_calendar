@@ -14,6 +14,7 @@ public class Events {
     private String description;
     private String organizer;
     private String calendar;
+    private String location;
 
 
     public Integer getId() {
@@ -75,5 +76,13 @@ public class Events {
 
     public void setCalendar(String calendar) {
         this.calendar = calendar;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
