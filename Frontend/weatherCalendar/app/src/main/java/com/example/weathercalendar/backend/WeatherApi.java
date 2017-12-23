@@ -24,11 +24,25 @@ public interface WeatherApi {
     @GET("api/v1/rain/{date}/{location}")
     Call<List<Rain>> getRainList(@Path("date") int date,@Path("location") String location);
 
+    @GET("api/v1/rain/{date}/{location}")
+    Call<String> getRainString(@Path("date") String date,@Path("location") String location);
+
+    @GET("api/v1/rain/{date}/{location}")
+    Call<List<Rain>> getRainList(@Path("date") String date,@Path("location") String location);
+
+
     @GET("api/v1/temperature/{date}/{location}")
     Call<String> getTemperatureString(@Path("date") int date,@Path("location") String location);
 
     @GET("api/v1/temperature/{date}/{location}")
     Call<List<Rain>> getTemperatureList(@Path("date") int date,@Path("location") String location);
+
+    @GET("api/v1/temperature/{date}/{location}")
+    Call<String> getTemperatureString(@Path("date") String date,@Path("location") String location);
+
+    @GET("api/v1/temperature/{date}/{location}")
+    Call<List<Rain>> getTemperatureList(@Path("date") String date,@Path("location") String location);
+
 
     @GET("api/v1/register/{token}")
     Call<String> sendToken(@Path("token") String token);

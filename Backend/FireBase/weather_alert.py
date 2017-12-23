@@ -47,6 +47,6 @@ class WeeklyAlert(threading.Thread):
 
                 push_service.notify_single_device(user, message_title, message_body)
                 print("Push to " + user)
-            time.sleep(60 * 3)
+            time.sleep(60 * 60*6)
 
         pass

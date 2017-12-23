@@ -1,9 +1,16 @@
 package com.example.weathercalendar;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -38,13 +45,21 @@ import com.framgia.library.calendardayview.data.IEvent;
 import com.framgia.library.calendardayview.data.IPopup;
 import com.framgia.library.calendardayview.decoration.CdvDecorationDefault;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.ContentValues.TAG;
+import static com.example.weathercalendar.DayCalendar.calendar;
+import static com.example.weathercalendar.DayCalendar.dayView;
+import static com.example.weathercalendar.DayCalendar.events;
 
 /**
  * Created by user on 2017/12/8.
@@ -53,18 +68,19 @@ import retrofit2.Response;
 public class DayCalendar extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    CalendarDayView dayView;
+    static CalendarDayView dayView;
 
-    ArrayList<IEvent> events;
-    ArrayList<IPopup> popups;
-    AccountCalendar ac;
+    static ArrayList<IEvent> events;
+    static ArrayList<IPopup> popups;
+    static AccountCalendar ac;
+    static Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.day_calendar_main);
         Intent intent =this.getIntent();
-        Calendar calendar= (Calendar) intent.getExtras().getSerializable("user");
+        calendar= (Calendar) intent.getExtras().getSerializable("user");
         // int month=test.getTime().getMonth();
         // int day=test.getTime().getDate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -134,32 +150,7 @@ public class DayCalendar extends AppCompatActivity
 
         events = new ArrayList<>();
 
-        WeatherApi weatherApi = new WeatherApiCreater().create();
-        // TODO 天氣查詢要符合時間
-        // TODO 能夠新增 刪除 修改 事件
-        Call<List<Rain>> call = weatherApi.getRainList(20171221,"臺北市");
-        // 异步请求
-        call.enqueue(new Callback<List<Rain>>() {
-            @Override
-            public void onResponse(Call<List<Rain>> call, Response<List<Rain>> response) {
-                // 处理返回数据
-                if (response.isSuccessful()) {
-                    Log.i("[WeatherApi]", "get Response");
-                    // Toast.makeText(DayCalendar.this,"Success",Toast.LENGTH_LONG).show();
 
-                    if(response.body().size() != 0)
-                        drawWeather(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Rain>> call, Throwable t) {
-                Log.e("Error", "onFailure: 请求数据失败");
-                Toast.makeText(DayCalendar.this,"Fail",Toast.LENGTH_LONG).show();;
-            }
-
-
-        });
 
         // {
         //     int eventColor = ContextCompat.getColor(this, R.color.eventColor);
@@ -269,63 +260,24 @@ public class DayCalendar extends AppCompatActivity
 
         // dayView.setEvents(events);
         dayView.setPopups(popups);
+
+        getLocationName();
     }
 
-    public void drawWeather(List<Rain> rainList)
+    @SuppressLint("MissingPermission")
+    public void getLocationName()
     {
-        for(Rain rain:rainList)
-        {
-            if(Integer.valueOf(rain.getValue()) <= 30)
-            {
-                continue;
-            }
-            int eventColor = Color.argb(100,0,0,255);
-            // int eventColor = ContextCompat.getColor(this, Color.argb());
-            // Calendar timeStart = Calendar.getInstance();
-            // timeStart.set(Calendar.HOUR_OF_DAY, 11);
-            // timeStart.set(Calendar.MINUTE, 0);
-            // Calendar timeEnd = (Calendar) timeStart.clone();
-            // timeEnd.set(Calendar.HOUR_OF_DAY, 15);
-            // timeEnd.set(Calendar.MINUTE, 30);
+        LocationManager locationManager = (LocationManager)
+                getSystemService(Context.LOCATION_SERVICE);
+        MyLocationListener locationListener = new MyLocationListener(getApplicationContext());
+        assert locationManager != null;
+        locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
 
-
-
-            Calendar timeStart = rain.getStarttime();
-            Calendar timeEnd = rain.getEndtime();
-            Calendar beginTime = Calendar.getInstance();
-            // Calendar beginTime = Calendar.getInstance();
-            beginTime.set(Calendar.HOUR_OF_DAY, 0);
-            beginTime.set(Calendar.MINUTE,0);
-            beginTime.set(Calendar.SECOND,0);
-            beginTime.getTime();
-
-            Calendar endTime = Calendar.getInstance();
-            // Calendar endTime = Calendar.getInstance();
-            endTime.set(Calendar.HOUR_OF_DAY, 23);
-            endTime.set(Calendar.MINUTE,59);
-            endTime.set(Calendar.SECOND,59);
-            endTime.getTime();
-
-            // 設定在時間範圍內
-            Log.i("Time  Compare",String.valueOf(timeEnd.after(endTime)));
-            Log.i("End Time",endTime.getTime().toString());
-            Log.i("End Time",timeEnd.getTime().toString());
-            if(timeStart.before(beginTime))
-            {
-                timeStart = (Calendar) beginTime.clone();
-            }
-            if(timeEnd.after(endTime))
-            {
-                timeEnd = (Calendar) endTime.clone();
-            }
-
-            Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
-            event.setLocation("AAA");
-
-            events.add(event);
-        }
-        dayView.setEvents(events);
+        while (locationListener.getAdminArea() != null)
+            Log.i("Get Location",locationListener.getAdminArea());
     }
+
 
 
     @Override
@@ -435,3 +387,167 @@ public class DayCalendar extends AppCompatActivity
     }
 }
 
+class MyLocationListener implements LocationListener {
+
+    private Context context;
+    private String AdminArea;
+    public MyLocationListener(Context context)
+    {
+        this.context = context;
+    }
+    public void queryWeather(String date,String location)
+    {
+        WeatherApi weatherApi = new WeatherApiCreater().create();
+        // TODO 天氣查詢要符合時間
+        // TODO 能夠新增 刪除 修改 事件
+        Call<List<Rain>> call = weatherApi.getRainList(date,location);
+        // 异步请求
+        call.enqueue(new Callback<List<Rain>>() {
+            @Override
+            public void onResponse(Call<List<Rain>> call, Response<List<Rain>> response) {
+                // 处理返回数据
+                if (response.isSuccessful()) {
+                    Log.i("[WeatherApi]", "get Response");
+                    // Toast.makeText(DayCalendar.this,"Success",Toast.LENGTH_LONG).show();
+
+                    if(response.body().size() != 0)
+                        drawWeather(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Rain>> call, Throwable t) {
+                Log.e("Error", "onFailure: 请求数据失败");
+                //Toast.makeText(DayCalendar.this,"Fail",Toast.LENGTH_LONG).show();;
+            }
+
+
+        });
+    }
+
+    public void drawWeather(List<Rain> rainList)
+    {
+        for(Rain rain:rainList)
+        {
+            if(Integer.valueOf(rain.getValue()) < 30)
+            {
+                continue;
+            }
+            int eventColor = Color.argb(100,0,0,255);
+            // int eventColor = ContextCompat.getColor(this, Color.argb());
+            // Calendar timeStart = Calendar.getInstance();
+            // timeStart.set(Calendar.HOUR_OF_DAY, 11);
+            // timeStart.set(Calendar.MINUTE, 0);
+            // Calendar timeEnd = (Calendar) timeStart.clone();
+            // timeEnd.set(Calendar.HOUR_OF_DAY, 15);
+            // timeEnd.set(Calendar.MINUTE, 30);
+
+
+
+            Calendar timeStart = rain.getStarttime();
+            Calendar timeEnd = rain.getEndtime();
+            Calendar beginTime = (Calendar) calendar.clone();
+            // Calendar beginTime = Calendar.getInstance();
+            beginTime.set(Calendar.HOUR_OF_DAY, 0);
+            beginTime.set(Calendar.MINUTE,0);
+            beginTime.set(Calendar.SECOND,0);
+            beginTime.getTime();
+
+            Calendar endTime = (Calendar) calendar.clone();
+            // Calendar endTime = Calendar.getInstance();
+            endTime.set(Calendar.HOUR_OF_DAY, 23);
+            endTime.set(Calendar.MINUTE,59);
+            endTime.set(Calendar.SECOND,59);
+            endTime.getTime();
+
+            // 設定在時間範圍內
+            Log.i("Time  Compare",String.valueOf(timeEnd.after(endTime)));
+            Log.i("End Time",endTime.getTime().toString());
+            Log.i("End Time",timeEnd.getTime().toString());
+            if(timeStart.before(beginTime))
+            {
+                timeStart = (Calendar) beginTime.clone();
+            }
+            if(timeEnd.after(endTime))
+            {
+                timeEnd = (Calendar) endTime.clone();
+            }
+
+            Event event = new Event(1, timeStart, timeEnd, "Event", "Hockaido", eventColor);
+            event.setLocation("AAA");
+
+            events.add(event);
+        }
+        dayView.setEvents(events);
+    }
+
+    @Override
+    public void onLocationChanged(Location loc) {
+        // editLocation.setText("");
+        // pb.setVisibility(View.INVISIBLE);
+        // Toast.makeText(
+        //         getBaseContext(),
+        //         "Location changed: Lat: " + loc.getLatitude() + " Lng: "
+        //                 + loc.getLongitude(), Toast.LENGTH_SHORT).show();
+        String longitude = "Longitude: " + loc.getLongitude();
+        Log.v(TAG, longitude);
+        String latitude = "Latitude: " + loc.getLatitude();
+        Log.v(TAG, latitude);
+
+        /*------- To get city name from coordinates -------- */
+        String cityName = null;
+        Geocoder gcd = new Geocoder(this.context, Locale.TRADITIONAL_CHINESE);
+        List<Address> addresses = null;
+        try {
+            addresses = gcd.getFromLocation(loc.getLatitude(),
+                    loc.getLongitude(), 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert addresses != null;
+        if (addresses.size() > 0) {
+            System.out.println(addresses.get(0).getLocality());
+            cityName = addresses.get(0).getAdminArea();
+
+        }
+        String s = longitude + "\n" + latitude + "\n\nMy Current City is: "
+                + cityName;
+
+        this.AdminArea = cityName;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        queryWeather(sdf.format(DayCalendar.calendar.getTime()),cityName);
+
+        Log.i("[Location]",s);
+
+    }
+
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {}
+
+    @Override
+    public void onProviderEnabled(String provider) {}
+
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
+    public String getAdminArea() {
+        return AdminArea;
+    }
+
+    public void setAdminArea(String adminArea) {
+        AdminArea = adminArea;
+    }
+}

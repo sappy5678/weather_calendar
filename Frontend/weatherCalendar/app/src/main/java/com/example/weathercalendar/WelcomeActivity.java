@@ -66,7 +66,7 @@ public class WelcomeActivity extends Activity {
         // 要求使用者給予權限
         ActivityCompat.requestPermissions(this,
                 new String[]{Manifest.permission.READ_CALENDAR,
-                        Manifest.permission.WRITE_CALENDAR}, 1);
+                        Manifest.permission.WRITE_CALENDAR,Manifest.permission.ACCESS_FINE_LOCATION}, 1);
     }
 
 
@@ -83,6 +83,10 @@ public class WelcomeActivity extends Activity {
 
         if (ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED){
             permissionList.add(Manifest.permission.WRITE_CALENDAR);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
         }
 
         if (!permissionList.isEmpty()){  //申请的集合不为空时，表示有需要申请的权限
