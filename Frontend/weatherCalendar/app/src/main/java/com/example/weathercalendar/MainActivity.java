@@ -1,6 +1,7 @@
 package com.example.weathercalendar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity
         OnDateSelectedListener, OnMonthChangedListener {
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     private final OneDayDecorator oneDayDecorator = new OneDayDecorator();
+    String targetAccount = null;
     //my variable
     @BindView(R.id.calendarView)
     MaterialCalendarView widget;
@@ -73,6 +75,9 @@ public class MainActivity extends AppCompatActivity
         widget.setOnDateChangedListener(this);
         widget.setOnDateChangedListener(this);
         widget.setOnMonthChangedListener(this);
+        SharedPreferences sharedPreferences = getSharedPreferences("USER", MODE_PRIVATE);
+        targetAccount = sharedPreferences.getString("USER", "");
+
         //秀出整張表的日期 不限制當月日期
         widget.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
         //高亮週末與當天粗體
@@ -204,7 +209,7 @@ public class MainActivity extends AppCompatActivity
         beginDate.setDate(1);
         endDate.setMonth(endDate.getMonth()%12+1);
         endDate.setDate(1);
-        ac = new AccountCalendar(getContentResolver(),getResources().getString(R.string.targetAccount));
+        ac = new AccountCalendar(getContentResolver(), targetAccount);
         ac.updateCalendars();
         ArrayList<Events> eventList = new ArrayList<>();
         Calendar beginTime = Calendar.getInstance();

@@ -9,7 +9,7 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="targetAccount">sappy5678@gmail.com</string>
+    <string name="targetAccount">xxx@gmail.com</string>
     <string-array name="TW_location">
         <item>基隆市</item>
         <item>臺北市</item>

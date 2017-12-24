@@ -1,9 +1,12 @@
 package com.example.weathercalendar;
 
 import android.Manifest;
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.weathercalendar.backend.WeatherApi;
@@ -20,6 +24,7 @@ import com.example.weathercalendar.backend.WeatherApiCreater;
 import com.example.weathercalendar.backend.pojo.Rain;
 import com.example.weathercalendar.calendar.AccountCalendar;
 import com.example.weathercalendar.calendar.pojo.Events;
+import com.google.android.gms.common.AccountPicker;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
@@ -34,18 +39,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
+
 public class WelcomeActivity extends Activity {
 
     /** Duration of wait **/
     private final int SPLASH_DISPLAY_LENGTH = 3000;
+    String targetAccount;
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_welcome);
-
+        SharedPreferences sharedPreferences = getSharedPreferences("USER", MODE_PRIVATE);
+        targetAccount = sharedPreferences.getString("USER", "");
         requestPermissions();
+
 
 
         /* New Handler to start the Menu-Activity 
@@ -60,6 +71,15 @@ public class WelcomeActivity extends Activity {
         //         WelcomeActivity.this.finish();
         //     }
         // }, SPLASH_DISPLAY_LENGTH);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!targetAccount.equals(""))
+            get_account_name();
+
     }
 
     public void request_permission(View view) {
@@ -93,16 +113,9 @@ public class WelcomeActivity extends Activity {
             ActivityCompat.requestPermissions(this,permissionList.toArray(new String[permissionList.size()]),1);
         }else { //所有的权限都已经授权过了
             sendCalendars();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    /* Create an Intent that will start the Menu-Activity. */
+            // get_account_name();
+            jump();
 
-                    Intent mainIntent = new Intent(WelcomeActivity.this,MainActivity.class);
-                    WelcomeActivity.this.startActivity(mainIntent);
-                    WelcomeActivity.this.finish();
-                }
-            }, SPLASH_DISPLAY_LENGTH);
 
         }
     }
@@ -158,7 +171,7 @@ public class WelcomeActivity extends Activity {
 
             public void run() {
 
-                AccountCalendar ac = new AccountCalendar(getContentResolver(), getResources().getString(R.string.targetAccount));
+                AccountCalendar ac = new AccountCalendar(getContentResolver(), targetAccount);
                 ac.updateCalendars();
                 ArrayList<Events> eventList = new ArrayList<>();
 
@@ -198,6 +211,50 @@ public class WelcomeActivity extends Activity {
         t1.start();
 
 
+    }
+
+    static final int GET_ACCOUNT_NAME_REQUEST = 1;  // 自訂的要求代碼
+
+    public void get_account_name() {
+        try {
+            Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+                    new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
+            startActivityForResult(intent, GET_ACCOUNT_NAME_REQUEST);  //GET_ACCOUNT_NAME_REQUEST是一個自訂的int, 用作分辨所返回的結果
+        } catch (ActivityNotFoundException e) {
+            // TODO
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == GET_ACCOUNT_NAME_REQUEST && resultCode == RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME); // 使用者所選的帳戶名稱
+            SharedPreferences pref = getSharedPreferences("USER", MODE_PRIVATE);
+            pref.edit()
+                    .putString("USER", accountName)
+                    .commit();
+
+            targetAccount = accountName;
+
+            Toast.makeText(this, "Success Login", Toast.LENGTH_LONG).show();
+            sendCalendars();
+            jump();
+            // EditText queryAccountResult = (EditText) findViewById(R.id.account);
+            // queryAccountResult.setText(accountName);
+        }
+    }
+
+    public void jump() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                    /* Create an Intent that will start the Menu-Activity. */
+
+                Intent mainIntent = new Intent(WelcomeActivity.this, MainActivity.class);
+                WelcomeActivity.this.startActivity(mainIntent);
+                WelcomeActivity.this.finish();
+            }
+        }, SPLASH_DISPLAY_LENGTH);
     }
 
 
