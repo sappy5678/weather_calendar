@@ -23,8 +23,10 @@ import android.widget.Toast;
 
 import com.example.weathercalendar.calendar.pojo.EventData;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Created by user on 2017/12/23.
@@ -59,6 +61,7 @@ public class event_detail extends AppCompatActivity {
     private Calendar endCal = Calendar.getInstance();
     private String loc="";
     private int calendar_id = 0;
+    SimpleDateFormat spf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,15 +83,18 @@ public class event_detail extends AppCompatActivity {
                 R.array.TW_location,
                 android.R.layout.simple_spinner_dropdown_item);
         locationChosser.setAdapter(lunchList);
+        spf = new SimpleDateFormat("HH:mm:ss");
         //set
         title.setText(eventDetail.getTitle());
         description.setText(eventDetail.getDescription());
         beginCal.setTime(eventDetail.getBegin().getTime());
-        BeginMes.setText(String.valueOf(beginCal.get(Calendar.YEAR))+"/"+String.valueOf(beginCal.get(Calendar.MONTH))+"/"+String.valueOf(beginCal.get(Calendar.DAY_OF_MONTH)));
-        BeginTimeMes.setText(String.valueOf(beginCal.get(Calendar.HOUR_OF_DAY))+":"+String.valueOf(beginCal.get(Calendar.MINUTE)));
+        BeginMes.setText(String.valueOf(beginCal.get(Calendar.YEAR)) + "/" + String.valueOf(beginCal.get(Calendar.MONTH) + 1) + "/" + String.valueOf(beginCal.get(Calendar.DAY_OF_MONTH)));
+        //BeginTimeMes.setText(String.valueOf(beginCal.get(Calendar.HOUR_OF_DAY))+":"+String.valueOf(beginCal.get(Calendar.MINUTE)));
+        BeginTimeMes.setText(spf.format(beginCal.getTime()));
         endCal.setTime(eventDetail.getEnd().getTime());
-        EndMes.setText(String.valueOf(endCal.get(Calendar.YEAR))+"/"+String.valueOf(endCal.get(Calendar.MONTH))+"/"+String.valueOf(endCal.get(Calendar.DAY_OF_MONTH)));
-        EndTimeMes.setText(String.valueOf(endCal.get(Calendar.HOUR_OF_DAY))+":"+String.valueOf(endCal.get(Calendar.MINUTE)));
+        EndMes.setText(String.valueOf(endCal.get(Calendar.YEAR)) + "/" + String.valueOf(endCal.get(Calendar.MONTH) + 1) + "/" + String.valueOf(endCal.get(Calendar.DAY_OF_MONTH)));
+        EndTimeMes.setText(spf.format(endCal.getTime()));
+        //EndTimeMes.setText(String.valueOf(endCal.get(Calendar.HOUR_OF_DAY))+":"+String.valueOf(endCal.get(Calendar.MINUTE)));
         if(eventDetail.getLocation()==null||eventDetail.getLocation().isEmpty())
         {
             locationChosser.setSelection(0);
@@ -134,6 +140,8 @@ public class event_detail extends AppCompatActivity {
                 int rows = getContentResolver().update(updateUri, values, null, null);
                 Toast toast = Toast.makeText(event_detail.this, "事件變更中"+"狀態: "+String.valueOf(rows), Toast.LENGTH_LONG);
                 toast.show();
+
+                finish();
             }
         });
         btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +155,7 @@ public class event_detail extends AppCompatActivity {
                 Toast toast = Toast.makeText(event_detail.this, "事件刪除中"+"狀態: "+String.valueOf(rows), Toast.LENGTH_LONG);
                 toast.show();
                 finish();
+
             }
         });
         locationChosser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -182,11 +191,11 @@ public class event_detail extends AppCompatActivity {
     }
     protected void timePicker(final TextView Mes,final TextView TimeMes,final Calendar cal)
     {
-        dataPicker=new DatePickerDialog(event_detail.this, AlertDialog.THEME_HOLO_DARK, new DatePickerDialog.OnDateSetListener() {
+        dataPicker = new DatePickerDialog(event_detail.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                 cal.set(year,month,dayOfMonth);
-                Mes.setText(String.valueOf(year)+"/"+String.valueOf(month)+"/"+String.valueOf(dayOfMonth));
+                Mes.setText(String.valueOf(year) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(dayOfMonth));
                 timePicker.show();
             }
         },
@@ -200,7 +209,9 @@ public class event_detail extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
                 cal.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 cal.set(Calendar.MINUTE,minute);
-                TimeMes.setText(String.valueOf(hourOfDay)+":"+String.valueOf(minute));
+                cal.getTime();
+                // TimeMes.setText(String.valueOf(hourOfDay)+":"+String.valueOf(minute));
+                TimeMes.setText(spf.format(cal.getTime()));
             }
         },
                 initCal.get(Calendar.HOUR_OF_DAY),

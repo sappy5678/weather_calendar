@@ -7,6 +7,8 @@ import android.app.TimePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,6 +31,8 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -75,6 +79,7 @@ public class event_adder extends AppCompatActivity {
     private Calendar endCal = Calendar.getInstance();
     private int calendar_id = 0;
     private String loc="";
+    SimpleDateFormat spf = new SimpleDateFormat("HH:mm:ss");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +150,15 @@ public class event_adder extends AppCompatActivity {
                 @SuppressLint("MissingPermission") Uri uri = cr.insert(Events.CONTENT_URI, values);
                 Toast toast = Toast.makeText(event_adder.this,"新增事件中", Toast.LENGTH_LONG);
                 toast.show();
+                // Intent intent = new Intent(event_adder.this, DayCalendar.class);
+                // //        Calendar test=dateToCalendar(date.getDate());
+                // Bundle bundle=new Bundle();
+                // bundle.putSerializable("user", (Serializable)beginCal);
+                // intent.putExtras(bundle);
+                // startActivity(intent);
+                // finish();
+
+                finish();
             }
         });
 
@@ -168,7 +182,8 @@ public class event_adder extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                 cal.set(year,month,dayOfMonth);
-                Mes.setText(String.valueOf(year)+"/"+String.valueOf(month)+"/"+String.valueOf(dayOfMonth));
+                Mes.setText(String.valueOf(year) + "/" + String.valueOf(month + 1) + "/" + String.valueOf(dayOfMonth));
+
                 timePicker.show();
             }
         },
@@ -181,7 +196,9 @@ public class event_adder extends AppCompatActivity {
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
                 cal.set(Calendar.HOUR_OF_DAY,hourOfDay);
                 cal.set(Calendar.MINUTE,minute);
-                TimeMes.setText(String.valueOf(hourOfDay)+":"+String.valueOf(minute));
+                cal.getTime();
+                //TimeMes.setText(String.valueOf(hourOfDay)+":"+String.valueOf(minute));
+                TimeMes.setText(spf.format(cal.getTime()));
             }
         },
                 initCal.get(Calendar.HOUR_OF_DAY),
@@ -205,7 +222,11 @@ public class event_adder extends AppCompatActivity {
         int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
         int PROJECTION_CALENDAR_ACCESS_LEVEL = 4;
         // 取得在EditText的帳戶名稱
-        String targetAccount = getResources().getString(R.string.targetAccount);
+        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
+
+        // String targetAccount = getResources().getString(R.string.targetAccount);
+        String targetAccount = sp.getString("USER", "");
+
         // 查詢日歷
         Cursor cur;
         ContentResolver cr = getContentResolver();
