@@ -74,12 +74,8 @@ public class DayCalendar extends AppCompatActivity
     static ArrayList<IPopup> popups;
     static AccountCalendar ac;
     static Calendar calendar;
-<<<<<<< HEAD
     ArrayList<EventData> eventList = new ArrayList<>();
-=======
     static String targetAccount;
-
->>>>>>> 16c2a84b11d7a4b16dd38870123b86bcfc5ced9d
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
