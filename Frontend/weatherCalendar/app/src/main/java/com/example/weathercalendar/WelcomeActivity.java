@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -53,6 +54,8 @@ public class WelcomeActivity extends Activity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_welcome);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         SharedPreferences sharedPreferences = getSharedPreferences("USER", MODE_PRIVATE);
         targetAccount = sharedPreferences.getString("USER", "");
         requestPermissions();
@@ -77,7 +80,7 @@ public class WelcomeActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        if (!targetAccount.equals(""))
+        if (targetAccount.equals(""))
             get_account_name();
 
     }
@@ -153,9 +156,9 @@ public class WelcomeActivity extends Activity {
                     // 所有權限都通過了
                     if (number == grantResults.length)
                     {
-                        Intent mainIntent = new Intent(WelcomeActivity.this,MainActivity.class);
-                        WelcomeActivity.this.startActivity(mainIntent);
-                        WelcomeActivity.this.finish();
+                        // Intent mainIntent = new Intent(WelcomeActivity.this,MainActivity.class);
+                        // WelcomeActivity.this.startActivity(mainIntent);
+                        // WelcomeActivity.this.finish();
                     }
                 }
                 break;
@@ -170,6 +173,13 @@ public class WelcomeActivity extends Activity {
         Runnable r1 = new Runnable() {
 
             public void run() {
+                int permission = ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    //未取得權限，向使用者要求允許權限
+                    return;
+
+                }
 
                 AccountCalendar ac = new AccountCalendar(getContentResolver(), targetAccount);
                 ac.updateCalendars();
