@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -73,7 +74,12 @@ public class DayCalendar extends AppCompatActivity
     static ArrayList<IPopup> popups;
     static AccountCalendar ac;
     static Calendar calendar;
+<<<<<<< HEAD
     ArrayList<EventData> eventList = new ArrayList<>();
+=======
+    static String targetAccount;
+
+>>>>>>> 16c2a84b11d7a4b16dd38870123b86bcfc5ced9d
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +90,11 @@ public class DayCalendar extends AppCompatActivity
         // int day=test.getTime().getDate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("USER", MODE_PRIVATE);
+        targetAccount = sharedPreferences.getString("USER", "");
+        if (targetAccount.equals(""))
+            Log.i("[Login]", "Error Login");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -185,7 +196,7 @@ public class DayCalendar extends AppCompatActivity
         //     events.add(event);
         // }
 
-        ac = new AccountCalendar(getContentResolver(),getResources().getString(R.string.targetAccount));
+        ac = new AccountCalendar(getContentResolver(), targetAccount);
         ac.updateCalendars();
 
 
