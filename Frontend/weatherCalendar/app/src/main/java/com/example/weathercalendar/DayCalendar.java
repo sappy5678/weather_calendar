@@ -12,7 +12,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -27,7 +29,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.weathercalendar.backend.WeatherApi;
@@ -35,6 +39,7 @@ import com.example.weathercalendar.backend.WeatherApiCreater;
 import com.example.weathercalendar.backend.pojo.Rain;
 import com.example.weathercalendar.calendar.AccountCalendar;
 import com.example.weathercalendar.calendar.CustomDecoration;
+import com.example.weathercalendar.calendar.decorators.EventDecorator;
 import com.example.weathercalendar.calendar.pojo.EventData;
 import com.example.weathercalendar.gravatar.MD5Util;
 import com.framgia.library.calendardayview.CalendarDayView;
@@ -44,6 +49,7 @@ import com.framgia.library.calendardayview.PopupView;
 import com.framgia.library.calendardayview.data.IEvent;
 import com.framgia.library.calendardayview.data.IPopup;
 import com.framgia.library.calendardayview.decoration.CdvDecorationDefault;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -51,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,12 +81,10 @@ public class DayCalendar extends AppCompatActivity
     static ArrayList<IPopup> popups;
     static AccountCalendar ac;
     static Calendar calendar;
-<<<<<<< HEAD
     ArrayList<EventData> eventList = new ArrayList<>();
-=======
+
     static String targetAccount;
 
->>>>>>> 16c2a84b11d7a4b16dd38870123b86bcfc5ced9d
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +151,7 @@ public class DayCalendar extends AppCompatActivity
                         pack.putSerializable("pack",eventList.get(temp.getEventIndex()));
                         jumper.putExtras(pack);
                         startActivity(jumper);
+                        // finish();
                         //data.
                         //pack.getSerializable("save",eventList[data.get])
                     }
@@ -165,9 +171,26 @@ public class DayCalendar extends AppCompatActivity
                     }
                 });
 
+        drawPopup();
+        getLocationName();
 
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        dayView.refresh();
+
+        new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
+        // drawPopup();
+        // getLocationName();
+
+    }
+
+    public void drawPopup() {
         events = new ArrayList<>();
-
+        eventList = new ArrayList<>();
 
 
         // {
@@ -200,8 +223,6 @@ public class DayCalendar extends AppCompatActivity
         ac.updateCalendars();
 
 
-
-
         assert calendar != null;
         Calendar beginTime = (Calendar) calendar.clone();
         // Calendar beginTime = Calendar.getInstance();
@@ -216,19 +237,14 @@ public class DayCalendar extends AppCompatActivity
         endTime.set(Calendar.MINUTE,59);
         endTime.set(Calendar.SECOND,59);
         endTime.get(Calendar.SECOND);
-        for(int i = 0; i < ac.getAccountNameList().size(); ++i)
-        {
+        for(int i = 0; i < ac.getAccountNameList().size(); ++i) {
             Log.i("Search Name",ac.getAccountNameList().get(i));
             eventList.addAll(ac.queryEvents(ac.getAccountNameList().get(i),beginTime,endTime));
         }
         popups = new ArrayList<>();
 
 
-
-
-
-        for(EventData eventItem:eventList)
-        {
+        for(EventData eventItem:eventList) {
             Popup popup = new Popup();
             popup.setStartTime(eventItem.getBegin());
             popup.setEndTime(eventItem.getEnd());
@@ -242,46 +258,8 @@ public class DayCalendar extends AppCompatActivity
             popup.setDescription(eventItem.getDescription());
             popups.add(popup);
         }
-        // {
-        //     Calendar timeStart = Calendar.getInstance();
-        //     timeStart.set(Calendar.HOUR_OF_DAY, 12);
-        //     timeStart.set(Calendar.MINUTE, 0);
-        //     Calendar timeEnd = (Calendar) timeStart.clone();
-        //     timeEnd.set(Calendar.HOUR_OF_DAY, 14);
-        //     timeEnd.set(Calendar.MINUTE, 0);
-        //
-        //     Popup popup = new Popup();
-        //     popup.setStartTime(timeStart);
-        //     popup.setEndTime(timeEnd);
-        //     popup.setImageStart("https://i.imgur.com/WRI3U4V.png");
-        //     popup.setTitle("event 1 with title");
-        //     popup.setDescription("Yuong alsdf");
-        //     popups.add(popup);
-        // }
-        //
-        // {
-        //     Calendar timeStart = Calendar.getInstance();
-        //     timeStart.set(Calendar.HOUR_OF_DAY, 20);
-        //     timeStart.set(Calendar.MINUTE, 0);
-        //     Calendar timeEnd = (Calendar) timeStart.clone();
-        //     timeEnd.set(Calendar.HOUR_OF_DAY, 22);
-        //     timeEnd.set(Calendar.MINUTE, 0);
-        //
-        //     Popup popup = new Popup();
-        //     popup.setStartTime(timeStart);
-        //     popup.setEndTime(timeEnd);
-        //     popup.setImageStart("http://sample.com/image.png");
-        //     popup.setTitle("event 2 with title");
-        //     popup.setDescription("Yuong alsdf");
-        //
-        //
-        //     popups.add(popup);
-        // }
 
-        // dayView.setEvents(events);
         dayView.setPopups(popups);
-
-        getLocationName();
     }
 
     @SuppressLint("MissingPermission")
@@ -405,6 +383,36 @@ public class DayCalendar extends AppCompatActivity
                 break;
         }
     }
+
+    private class ApiSimulator extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(@NonNull Void... voids) {
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(@NonNull Integer calendarDays) {
+            super.onPostExecute(calendarDays);
+            LinearLayout mLayoutDayView = (LinearLayout) findViewById(com.framgia.library.calendardayview.R.id.dayview_container);
+            FrameLayout mLayoutEvent = (FrameLayout) findViewById(com.framgia.library.calendardayview.R.id.event_container);
+            FrameLayout mLayoutPopup = (FrameLayout) findViewById(com.framgia.library.calendardayview.R.id.popup_container);
+
+            mLayoutDayView.removeAllViews();
+            mLayoutEvent.removeAllViews();
+            mLayoutPopup.removeAllViews();
+            drawPopup();
+            getLocationName();
+
+
+        }
+    }
 }
 
 class MyLocationListener implements LocationListener {
@@ -454,15 +462,6 @@ class MyLocationListener implements LocationListener {
                 continue;
             }
             int eventColor = Color.argb(100,0,0,255);
-            // int eventColor = ContextCompat.getColor(this, Color.argb());
-            // Calendar timeStart = Calendar.getInstance();
-            // timeStart.set(Calendar.HOUR_OF_DAY, 11);
-            // timeStart.set(Calendar.MINUTE, 0);
-            // Calendar timeEnd = (Calendar) timeStart.clone();
-            // timeEnd.set(Calendar.HOUR_OF_DAY, 15);
-            // timeEnd.set(Calendar.MINUTE, 30);
-
-
 
             Calendar timeStart = rain.getStarttime();
             Calendar timeEnd = rain.getEndtime();
@@ -500,6 +499,7 @@ class MyLocationListener implements LocationListener {
         }
         dayView.setEvents(events);
     }
+
 
     @Override
     public void onLocationChanged(Location loc) {

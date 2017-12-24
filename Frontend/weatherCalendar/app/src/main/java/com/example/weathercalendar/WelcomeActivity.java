@@ -22,12 +22,11 @@ import android.widget.Toast;
 import com.example.weathercalendar.backend.WeatherApi;
 import com.example.weathercalendar.backend.WeatherApiCreater;
 import com.example.weathercalendar.calendar.AccountCalendar;
-<<<<<<< HEAD
+
 import com.example.weathercalendar.calendar.pojo.EventData;
-=======
-import com.example.weathercalendar.calendar.pojo.Events;
+
 import com.google.android.gms.common.AccountPicker;
->>>>>>> 16c2a84b11d7a4b16dd38870123b86bcfc5ced9d
+
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;

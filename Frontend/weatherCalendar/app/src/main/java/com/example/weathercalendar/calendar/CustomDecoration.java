@@ -63,6 +63,7 @@ public class CustomDecoration extends CdvDecorationDefault {
         ImageView imvEnd = (ImageView) popupView.findViewById(com.framgia.library.calendardayview.R.id.imv_end);
         ImageView imvStart = (ImageView) popupView.findViewById(com.framgia.library.calendardayview.R.id.image_start);
 
+        textQuote.setVisibility(View.GONE);
         // do something with views
         Picasso.with(mContext)
                 .load(popup.getImageStart())
