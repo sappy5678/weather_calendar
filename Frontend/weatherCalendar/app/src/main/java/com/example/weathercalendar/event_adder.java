@@ -77,7 +77,7 @@ public class event_adder extends AppCompatActivity {
     public Calendar initCal = Calendar.getInstance();
     private Calendar beginCal = Calendar.getInstance();
     private Calendar endCal = Calendar.getInstance();
-    private int calendar_id = 0;
+    private int calendar_id = -1;
     private String loc="";
     SimpleDateFormat spf = new SimpleDateFormat("HH:mm:ss");
 
@@ -127,6 +127,7 @@ public class event_adder extends AppCompatActivity {
 
             }
         });
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(event_adder.this);
         btncalendar_chooser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,6 +137,23 @@ public class event_adder extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //防呆
+                if(calendar_id==-1) {
+                    dialog.setTitle("警告");
+                    dialog.setMessage("請選擇要插入的日曆");
+                    dialog.setPositiveButton("好", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(event_adder.this, "請選擇要插入事件的日曆", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dialog.show();
+                    return;
+                }
+                //設定
+
+
                 TimeZone zone=initCal.getTimeZone();
 
                 ContentResolver cr = getContentResolver();
