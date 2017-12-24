@@ -10,7 +10,7 @@ import android.provider.CalendarContract;
 import android.util.Log;
 
 
-import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.calendar.pojo.EventData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -132,7 +132,7 @@ public class AccountCalendar {
 
 
     @SuppressLint("MissingPermission")
-    public ArrayList<Events> queryEvents(String targetCalendar,Calendar beginTime,Calendar endTime)
+    public ArrayList<EventData> queryEvents(String targetCalendar, Calendar beginTime, Calendar endTime)
     {
         // 設定要返回的資料
         String[] INSTANCE_PROJECTION = new String[]{
@@ -173,7 +173,7 @@ public class AccountCalendar {
         ContentUris.appendId(builder, endMillis);
 
         // 建立List來暫存查詢的結果
-        ArrayList<Events> eventList = new ArrayList<>();
+        ArrayList<EventData> eventList = new ArrayList<>();
         cur = cr.query(builder.build(),
                 INSTANCE_PROJECTION,
                 selection,
@@ -181,7 +181,7 @@ public class AccountCalendar {
                 null);
         if (cur != null) {
             while (cur.moveToNext()) {
-                Events event = new Events();
+                EventData event = new EventData();
                 long eventID = 0;
                 long beginVal = 0;
                 long endVal = 0;

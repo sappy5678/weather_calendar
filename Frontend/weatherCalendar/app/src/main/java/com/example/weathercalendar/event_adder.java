@@ -74,6 +74,7 @@ public class event_adder extends AppCompatActivity {
     private Calendar beginCal = Calendar.getInstance();
     private Calendar endCal = Calendar.getInstance();
     private int calendar_id = 0;
+    private String loc="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,15 +91,16 @@ public class event_adder extends AppCompatActivity {
         btnEnd = (Button) findViewById(R.id.endTime);
         btnSend = (Button) findViewById(R.id.send);
         btncalendar_chooser = (Button) findViewById(R.id.calendar_chooser);
-        final String[] loc = {""};
         final ArrayAdapter<CharSequence> lunchList = ArrayAdapter.createFromResource(getApplicationContext(),
                 R.array.TW_location,
                 android.R.layout.simple_spinner_dropdown_item);
         locationChosser.setAdapter(lunchList);
+        //initial
+        loc=(String)lunchList.getItem(0);
         locationChosser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                loc[0] = lunchList.getItem(i).toString();
+                loc = lunchList.getItem(i).toString();
             }
 
             @Override
@@ -139,6 +141,7 @@ public class event_adder extends AppCompatActivity {
                 values.put(Events.DESCRIPTION, description.getText().toString());
                 values.put(Events.CALENDAR_ID, calendar_id);
                 values.put(Events.EVENT_TIMEZONE, zone.getID());
+                values.put(Events.EVENT_LOCATION, loc);
                 @SuppressLint("MissingPermission") Uri uri = cr.insert(Events.CONTENT_URI, values);
                 Toast toast = Toast.makeText(event_adder.this,"新增事件中", Toast.LENGTH_LONG);
                 toast.show();

@@ -10,7 +10,7 @@ public class Calendars {
 
     private Integer id;
     private String displayName;
-    private ArrayList<Events> events;
+    private ArrayList<EventData> events;
 
 
     // constructor
@@ -39,11 +39,11 @@ public class Calendars {
         this.displayName = displayName;
     }
 
-    public ArrayList<Events> getEvents() {
+    public ArrayList<EventData> getEvents() {
         return events;
     }
 
-    public void setEvents(ArrayList<Events> events) {
+    public void setEvents(ArrayList<EventData> events) {
         this.events = events;
     }
 }

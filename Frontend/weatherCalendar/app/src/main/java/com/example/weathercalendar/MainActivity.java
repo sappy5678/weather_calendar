@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 //import android.support.v4.app.ActivityCompat;
 //import android.support.v4.content.ContextCompat;
 
@@ -21,16 +20,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.example.weathercalendar.backend.WeatherApi;
-import com.example.weathercalendar.backend.WeatherApiCreater;
 import com.example.weathercalendar.calendar.AccountCalendar;
 import com.example.weathercalendar.calendar.decorators.HighlightWeekendsDecorator;
 import com.example.weathercalendar.calendar.decorators.OneDayDecorator;
-import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.calendar.pojo.EventData;
 import com.example.weathercalendar.calendar.decorators.EventDecorator;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
@@ -48,9 +43,6 @@ import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity
@@ -62,6 +54,11 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.calendarView)
     MaterialCalendarView widget;
     //my variable end
+    @Override
+    protected  void onResume() {
+        super.onResume();
+        new ApiSimulator().executeOnExecutor(Executors.newSingleThreadExecutor());
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -206,7 +203,7 @@ public class MainActivity extends AppCompatActivity
         endDate.setDate(1);
         ac = new AccountCalendar(getContentResolver(),getResources().getString(R.string.targetAccount));
         ac.updateCalendars();
-        ArrayList<Events> eventList = new ArrayList<>();
+        ArrayList<EventData> eventList = new ArrayList<>();
         Calendar beginTime = Calendar.getInstance();
         // Calendar beginTime = Calendar.getInstance();
         beginTime.set(Calendar.YEAR,beginDate.getYear()+1900);
@@ -231,9 +228,9 @@ public class MainActivity extends AppCompatActivity
             Log.i("Search Name",ac.getAccountNameList().get(i));
             eventList.addAll(ac.queryEvents(ac.getAccountNameList().get(i),beginTime,endTime));
         }
-        Iterator<Events> iterator = eventList.iterator();
+        Iterator<EventData> iterator = eventList.iterator();
         while(iterator.hasNext()){
-            Events temp=iterator.next();
+            EventData temp=iterator.next();
 //            if(temp.getBegin().getTime().getMonth()!=date.getMonth()){
 //                iterator.remove();
 //            }
@@ -275,8 +272,15 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            widget.addDecorator(new EventDecorator(Color.RED, calendarDays));
+            widget.addDecorator(new EventDecorator(Color.argb(125,247,71,71), calendarDays));
         }
+    }
+    public int getIntFromColor(int Red, int Green, int Blue){
+        Red = (Red << 16) & 0x00FF0000; //Shift red 16-bits and mask out other stuff
+        Green = (Green << 8) & 0x0000FF00; //Shift Green 8-bits and mask out other stuff
+        Blue = Blue & 0x000000FF; //Mask out anything not blue.
+
+        return 0xFF000000 | Red | Green | Blue; //0xFF000000 for 100% Alpha. Bitwise OR everything together.
     }
 
 

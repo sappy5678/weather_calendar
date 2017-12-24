@@ -1,29 +1,13 @@
 package com.example.weathercalendar.backend;
 
-import android.annotation.SuppressLint;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.weathercalendar.MainActivity;
-import com.example.weathercalendar.R;
-import com.example.weathercalendar.WelcomeActivity;
-import com.example.weathercalendar.calendar.AccountCalendar;
-import com.example.weathercalendar.calendar.pojo.Events;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by sappy5678 on 12/22/17.

@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -35,7 +34,7 @@ import com.example.weathercalendar.backend.WeatherApiCreater;
 import com.example.weathercalendar.backend.pojo.Rain;
 import com.example.weathercalendar.calendar.AccountCalendar;
 import com.example.weathercalendar.calendar.CustomDecoration;
-import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.calendar.pojo.EventData;
 import com.example.weathercalendar.gravatar.MD5Util;
 import com.framgia.library.calendardayview.CalendarDayView;
 
@@ -74,7 +73,7 @@ public class DayCalendar extends AppCompatActivity
     static ArrayList<IPopup> popups;
     static AccountCalendar ac;
     static Calendar calendar;
-
+    ArrayList<EventData> eventList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +128,15 @@ public class DayCalendar extends AppCompatActivity
                 new PopupView.OnEventPopupClickListener() {
                     @Override
                     public void onPopupClick(PopupView view, IPopup data) {
+                        Popup temp=(Popup)data;
                         Log.e("TAG", "onPopupClick:" + data.getTitle());
+                        Intent jumper=new Intent(getApplicationContext(),event_detail.class);
+                        Bundle pack=new Bundle();
+                        pack.putSerializable("pack",eventList.get(temp.getEventIndex()));
+                        jumper.putExtras(pack);
+                        startActivity(jumper);
+                        //data.
+                        //pack.getSerializable("save",eventList[data.get])
                     }
 
                     @Override
@@ -180,7 +187,7 @@ public class DayCalendar extends AppCompatActivity
 
         ac = new AccountCalendar(getContentResolver(),getResources().getString(R.string.targetAccount));
         ac.updateCalendars();
-        ArrayList<Events> eventList = new ArrayList<>();
+
 
 
 
@@ -209,11 +216,13 @@ public class DayCalendar extends AppCompatActivity
 
 
 
-        for(Events eventItem:eventList)
+        for(EventData eventItem:eventList)
         {
             Popup popup = new Popup();
             popup.setStartTime(eventItem.getBegin());
             popup.setEndTime(eventItem.getEnd());
+            popup.setEventID(eventItem.getId());
+            popup.setEventIndex(eventList.indexOf(eventItem));
             // String email = "sappy5678@gmail.com";
             String email = eventItem.getOrganizer();
             String hash = MD5Util.md5Hex(email);

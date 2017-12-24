@@ -10,6 +10,9 @@ import java.util.Calendar;
 
 public class Popup implements IPopup {
 
+
+    private  Integer eventID;
+    private  Integer eventIndex;
     Calendar startTime;
     Calendar endTime;
 
@@ -92,6 +95,20 @@ public class Popup implements IPopup {
     @Override
     public Calendar getEndTime() {
         return endTime;
+    }
+    public int getEventID() {
+        return eventID;
+    }
+
+    public void setEventID(int eventID) {
+        this.eventID = eventID;
+    }
+    public Integer getEventIndex() {
+        return eventIndex;
+    }
+
+    public void setEventIndex(Integer eventIndex) {
+        this.eventIndex = eventIndex;
     }
 }
 

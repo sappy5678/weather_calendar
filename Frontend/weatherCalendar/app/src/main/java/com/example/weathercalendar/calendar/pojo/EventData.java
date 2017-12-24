@@ -1,12 +1,13 @@
 package com.example.weathercalendar.calendar.pojo;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  * Created by sappy5678 on 12/17/17.
  */
 
-public class Events {
+public class EventData implements Serializable {
     private Integer id;
     private String title;
     private Calendar begin = Calendar.getInstance();

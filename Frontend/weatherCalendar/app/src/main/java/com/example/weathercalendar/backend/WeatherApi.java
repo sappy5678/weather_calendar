@@ -1,7 +1,7 @@
 package com.example.weathercalendar.backend;
 
 import com.example.weathercalendar.backend.pojo.Rain;
-import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.calendar.pojo.EventData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,6 @@ public interface WeatherApi {
     Call<String> sendToken(@Path("token") String token);
 
     @POST("api/v1/calendars/{token}")
-    Call<String> sendCalendars(@Path("token") String token, @Body ArrayList<Events> events);
+    Call<String> sendCalendars(@Path("token") String token, @Body ArrayList<EventData> events);
 }
 

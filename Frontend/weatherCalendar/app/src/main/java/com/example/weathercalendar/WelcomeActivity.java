@@ -11,15 +11,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.weathercalendar.backend.WeatherApi;
 import com.example.weathercalendar.backend.WeatherApiCreater;
-import com.example.weathercalendar.backend.pojo.Rain;
 import com.example.weathercalendar.calendar.AccountCalendar;
-import com.example.weathercalendar.calendar.pojo.Events;
+import com.example.weathercalendar.calendar.pojo.EventData;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.IOException;
@@ -31,8 +29,6 @@ import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class WelcomeActivity extends Activity {
 
@@ -160,7 +156,7 @@ public class WelcomeActivity extends Activity {
 
                 AccountCalendar ac = new AccountCalendar(getContentResolver(), getResources().getString(R.string.targetAccount));
                 ac.updateCalendars();
-                ArrayList<Events> eventList = new ArrayList<>();
+                ArrayList<EventData> eventList = new ArrayList<>();
 
                 Calendar beginTime = Calendar.getInstance();
                 Calendar endTime = Calendar.getInstance();
