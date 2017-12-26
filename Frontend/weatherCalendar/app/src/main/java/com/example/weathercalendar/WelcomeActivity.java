@@ -171,11 +171,13 @@ public class WelcomeActivity extends Activity {
             public void run() {
                 int permission = ActivityCompat.checkSelfPermission(getApplicationContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
                 // if (permission != PackageManager.PERMISSION_GRANTED) {
                 //     //未取得權限，向使用者要求允許權限
                 //     return;
                 //
                 // }
+
 
                 AccountCalendar ac = new AccountCalendar(getContentResolver(), targetAccount);
                 ac.updateCalendars();
