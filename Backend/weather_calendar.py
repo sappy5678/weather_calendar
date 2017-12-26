@@ -21,6 +21,7 @@ users = {}
 
 def save_users():
     with open('users.pkl', 'wb') as output:
+        # users = {}
         pickle.dump(users, output, pickle.HIGHEST_PROTOCOL)
 
 
@@ -84,6 +85,7 @@ def temperature(date, location):
 @app.route("/api/v1/calendars/<token>", methods=['GET', 'POST'])
 def getCalendar(token):
     if request.method == 'POST':
+        print("Get Calendar")
         users[token] = request.json
         for event in users[token]:
             begin = datetime.datetime(event["begin"]["year"], event["begin"]["month"]+1, event["begin"]["dayOfMonth"],
@@ -100,6 +102,7 @@ def getCalendar(token):
 
 if __name__ == '__main__':
     # WeeklyWeatherCrawler().start()
+    # save_users()
 
     try:
         with open('users.pkl', 'rb') as data:
@@ -108,7 +111,7 @@ if __name__ == '__main__':
     except:
         users = {}
 
-    print(users)
+    # print(users)
 
     WeeklyAlert(users).start()
     app.run(host='0.0.0.0', port='5000')

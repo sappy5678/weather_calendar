@@ -21,7 +21,8 @@ class WeeklyAlert(threading.Thread):
     def run(self):
         message_title = "下雨警報"
         while True:
-            message_body = "以下事件皆有可能下雨\n"
+            print("Start Push to user")
+            message_body = "以下事件有可能下雨喔\n"
             # 查詢天氣
             d = db.session.execute("SELECT * FROM public.rain_percent ")
             rain = []
@@ -46,7 +47,9 @@ class WeeklyAlert(threading.Thread):
                     pass
 
                 push_service.notify_single_device(user, message_title, message_body)
-                print("Push to " + user)
+                # print("Push to " + user)
+                print("Push to user" + message_body)
+
             time.sleep(60 * 60*6)
 
         pass

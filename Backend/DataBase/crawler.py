@@ -23,15 +23,19 @@ class WeeklyWeatherCrawler(threading.Thread):
             respond = requests.get(api)
             with open("w.xml",mode='w') as f:
                 f.write(respond.text)
+
+            print("Download Finished")
             tree = ET.ElementTree(file="./w.xml")
             root = tree.getroot()
 
-            db.session.execute('''ALTER SEQUENCE temperature_id_seq RESTART WITH 1''')
-            db.session.execute('''TRUNCATE TABLE temperature''')
-            db.session.execute('''ALTER SEQUENCE rain_percent_id_seq RESTART WITH 1''')
-            db.session.execute('''TRUNCATE TABLE rain_percent''')
-            db.session.commit()
+            print("TRUNCATE DataBase")
+            # db.session.execute('''ALTER SEQUENCE temperature_id_seq RESTART WITH 1''')
+            # db.session.execute('''TRUNCATE TABLE temperature''')
+            # db.session.execute('''ALTER SEQUENCE rain_percent_id_seq RESTART WITH 1''')
+            # db.session.execute('''TRUNCATE TABLE rain_percent''')
+            # db.session.commit()
 
+            print("Start Parser")
             for i in root.iter(URI + 'location'):
 
                 # strip is remove space tab and newline
